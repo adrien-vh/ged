@@ -1,0 +1,23 @@
+@import 'in-recherche';
+
+#dataJson {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #dadada;
+    padding: 0 10px 5px 10px;
+    font-size: 12px;
+}
+
+#gedInstance .uk-sticky-placeholder:nth-child(2){
+   display:none;
+}
+
+/*#navBar {
+    top: 0;
+    left: 0;
+    width: 100%;
+}*/
+
+
+

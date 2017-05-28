@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Ged</title>
+
+        <!-- UIkit CSS -->
+        <link rel="stylesheet" href="vendor/uikit.min.css" />
+        <link rel="stylesheet" href="css/jqcloud.css" />
+        <link rel="stylesheet" href="css/styles.css" />
+
+        <!-- jQuery is required -->
+        <script src="vendor/jquery.min.js"></script>
+
+        <!-- UIkit JS -->
+        <script src="vendor/uikit.js"></script>
+        <script src="vendor/uikit-icons.min.js"></script>
+        
+        <script src="vendor/vue.min.js"></script>
+        <script src="vendor/jqcloud.min.js"></script>
+        <script src="vendor/typeahead.min.js"></script>
+        <script src="js/main.js"></script>
+    </head>
+    <body>
+        <div id="gedInstance">
+            <nav class="uk-navbar-container" uk-navbar>
+                <div class="uk-navbar-left">
+                    <ul class="uk-navbar-nav">
+                        <li v-bind:class="{ 'uk-active': page === 'recherche' }"><a href="#" v-on:click="page = 'recherche'">Recherche</a></li>
+                        <li v-bind:class="{ 'uk-active': page === 'tags' }"><a href="#" v-on:click="page = 'tags'">Tags</a></li>
+                        <li v-bind:class="{ 'uk-active': page === 'arborescence' }"><a href="#"v-on:click="page = 'arborescence'">Arborescence</a></li>
+                        <li v-bind:class="{ 'uk-active': page === 'ajout' }"><a href="#"v-on:click="page = 'ajout'">Ajout</a></li>
+                        <li v-bind:class="{ 'uk-active': page === 'configuration' }"><a href="#"v-on:click="page = 'configuration'">Configuration</a></li>
+                    </ul>
+                </div> 
+            </nav>
+            <div class="uk-container-small uk-align-center" id="">
+                <div v-if="page === 'recherche'">
+                    <div class="uk-margin uk-text-center">
+                        <in-recherche v-on:change="lanceRecherche"></in-recherche>
+                    </div>
+                </div>
+                <div v-else-if="page === 'tags'">
+                    <nuage-tags :tags="tags"></nuage-tags>
+                </div>
+                <div v-else-if="page === 'arborescence'">
+                    <ul class="uk-breadcrumb">
+                        <li><a href="#">Procédures</a></li>
+                        <li><a href="#">Applications</a></li>
+                        <li><span href="#">Ciril</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="dataJson">
+                <!--{{ $data | json }}-->
+            </div>
+        </div>
+        <script type="text/x-template" id="in-recherche-template">
+            <div class="uk-inline uk-width-1-1">
+                <input type="text" class="autocomplete"><br>
+                <button class="uk-button uk-button-default uk-button-small bout-recherche">Chercher</button>
+            </div>
+        </script>
+        
+    </body>
+</html>
