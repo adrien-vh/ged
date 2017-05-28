@@ -23,6 +23,7 @@
         <script src="vendor/uikit-icons.min.js"></script>
         
         <script src="vendor/vue.min.js"></script>
+        <script src="vendor/vue-router.js"></script>
         <script src="vendor/jqcloud.min.js"></script>
         <script src="vendor/typeahead.min.js"></script>
         <script src="js/main.js"></script>
@@ -32,41 +33,37 @@
             <nav class="uk-navbar-container" uk-navbar>
                 <div class="uk-navbar-left">
                     <ul class="uk-navbar-nav">
-                        <li v-bind:class="{ 'uk-active': page === 'recherche' }"><a href="#" v-on:click="page = 'recherche'">Recherche</a></li>
-                        <li v-bind:class="{ 'uk-active': page === 'tags' }"><a href="#" v-on:click="page = 'tags'">Tags</a></li>
-                        <li v-bind:class="{ 'uk-active': page === 'arborescence' }"><a href="#"v-on:click="page = 'arborescence'">Arborescence</a></li>
-                        <li v-bind:class="{ 'uk-active': page === 'ajout' }"><a href="#"v-on:click="page = 'ajout'">Ajout</a></li>
-                        <li v-bind:class="{ 'uk-active': page === 'configuration' }"><a href="#"v-on:click="page = 'configuration'">Configuration</a></li>
+                        <li><router-link to="/recherche">Recherche</router-link></li>
+                        <li><router-link to="/tags">Tags</router-link></li>
+                        <li><router-link to="/arborescence">Arborescence</router-link></li>
+                        <li><router-link to="/ajout">Ajout</router-link></li>
+                        <li><router-link to="/configuration">Configuration</router-link></li>
                     </ul>
                 </div> 
             </nav>
             <div class="uk-container-small uk-align-center" id="">
-                <div v-if="page === 'recherche'">
-                    <div class="uk-margin uk-text-center">
-                        <in-recherche v-on:change="lanceRecherche"></in-recherche>
-                    </div>
-                </div>
-                <div v-else-if="page === 'tags'">
-                    <nuage-tags :tags="tags"></nuage-tags>
-                </div>
-                <div v-else-if="page === 'arborescence'">
-                    <ul class="uk-breadcrumb">
-                        <li><a href="#">Procédures</a></li>
-                        <li><a href="#">Applications</a></li>
-                        <li><span href="#">Ciril</span></li>
-                    </ul>
-                </div>
+                <router-view></router-view>
             </div>
             
             <div id="dataJson">
                 <!--{{ $data | json }}-->
             </div>
         </div>
-        <script type="text/x-template" id="in-recherche-template">
-            <div class="uk-inline uk-width-1-1">
-                <input type="text" class="autocomplete"><br>
+        <script type="text/x-template" id="page-recherche-template">
+            <div class="uk-margin uk-text-center">
+                <in-recherche v-on:change="lanceRecherche"></in-recherche><br>
                 <button class="uk-button uk-button-default uk-button-small bout-recherche">Chercher</button>
             </div>
+        </script>
+        <script type="text/x-template" id="page-tags-template">
+            <nuage-tags :tags="tags"></nuage-tags>
+        </script>
+        <script type="text/x-template" id="page-arborescence-template">
+            <ul class="uk-breadcrumb">
+                <li><a href="#">Procédures</a></li>
+                <li><a href="#">Applications</a></li>
+                <li><span href="#">Ciril</span></li>
+            </ul>
         </script>
         
     </body>

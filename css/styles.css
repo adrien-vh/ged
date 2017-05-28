@@ -90,6 +90,16 @@ input.autocomplete.tt-hint {
 }
 
 /* line 3, ../sass/styles.scss */
+.uk-navbar-nav a.uk-active {
+  color: #333333;
+  pointer-events: none;
+}
+/* line 6, ../sass/styles.scss */
+.uk-navbar-nav a.uk-active:focus {
+  color: #333333;
+}
+
+/* line 11, ../sass/styles.scss */
 #dataJson {
   position: fixed;
   bottom: 0;
@@ -99,7 +109,7 @@ input.autocomplete.tt-hint {
   font-size: 12px;
 }
 
-/* line 12, ../sass/styles.scss */
+/* line 20, ../sass/styles.scss */
 #gedInstance .uk-sticky-placeholder:nth-child(2) {
   display: none;
 }

@@ -1,5 +1,13 @@
 @import 'in-recherche';
 
+.uk-navbar-nav a.uk-active {
+    color: #333333;
+    pointer-events: none;
+    &:focus {
+        color: #333333;
+    }
+}
+
 #dataJson {
     position: fixed;
     bottom: 0;

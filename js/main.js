@@ -31,54 +31,19 @@ var substringMatcher = function (strs) {
           'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
           'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
           'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-             ];
-
-Vue.component('nuage-tags', {
-    props: ['tags'],
-    template: '<div id="coucou" style="width: 100%; height: 250px;"></div>',
-    watch : {
-        tags : function () {
-            console.log("coucou");
+             ],
+    compRecherche = {
+        template: '#page-recherche-template',
+        methods: {
+            lanceRecherche : function (texte) {
+                console.log(texte);
+            }
         }
     },
-    mounted : function () {
-        console.log($(this.$el).find('div'));
-        console.log(this.tags);
-        $(this.$el).jQCloud(this.tags);
-    }
-});
-
-Vue.component('in-recherche', {
-    template : '#in-recherche-template',
-    mounted : function () {
-        var me = this;
-        $(this.$el).find("input").typeahead(
-            {
-                hint: true,
-                highlight: true,
-                minLength: 1
-            },
-            {
-                name: 'states',
-                source: substringMatcher(states)
-            }
-        ).on('typeahead:select', function (event, suggession) {
-            me.$emit('change', suggession);
-        }).on('keyup', function (e) {
-            if (e.originalEvent.keyCode === 13) {
-                me.$emit('change', $(this).val());
-            }
-        });
-    }
-});
-
-$(function () {
-    var viewmodel = new Vue({
-        el: '#gedInstance',
-        data: {
-            textinput: 'Too hot, hot damn.',
-            page : 'recherche',
-            tags : [
+    compTags = {
+        template: '#page-tags-template',
+        data : function () { return {
+            tags: [
                 {text: "Lorem", weight: 13},
                 {text: "Ipsum", weight: 10.5},
                 {text: "Dolor", weight: 9.4},
@@ -122,14 +87,63 @@ $(function () {
                 {text: "et nulla", weight: 1},
                 {text: "Sed", weight: 1}
             ]
-        },
-        methods : {
-            setPage : function (page) {
-                this.page = page;
-            },
-            lanceRecherche : function (texte) {
-                console.log(texte);
-            }
+        }}
+    },
+    compArborescence = {
+        template : '#page-arborescence-template'
+    }
+    routes = [
+      { path: '/recherche', component: compRecherche },
+      { path: '/tags', component: compTags },
+      { path: '/arborescence', component: compArborescence }
+    ],
+    router = new VueRouter({
+        routes : routes,
+        linkActiveClass : 'uk-active'
+    });
+
+Vue.component('nuage-tags', {
+    props: ['tags'],
+    template: '<div id="coucou" style="width: 100%; height: 250px;"></div>',
+    watch : {
+        tags : function () {
+            console.log("coucou");
         }
+    },
+    mounted : function () {
+        console.log($(this.$el).find('div'));
+        console.log(this.tags);
+        $(this.$el).jQCloud(this.tags);
+    }
+});
+
+Vue.component('in-recherche', {
+    template : '<input type="text" class="autocomplete">',
+    mounted : function () {
+        var me = this;
+        $(this.$el).typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'states',
+                source: substringMatcher(states)
+            }
+        ).on('typeahead:select', function (event, suggession) {
+            me.$emit('change', suggession);
+        }).on('keyup', function (e) {
+            if (e.originalEvent.keyCode === 13) {
+                me.$emit('change', $(this).val());
+            }
+        });
+    }
+});
+
+$(function () {
+    var viewmodel = new Vue({
+        router : router,
+        el: '#gedInstance'
     });
 });
