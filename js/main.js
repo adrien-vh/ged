@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true, node: true, sloppy: true, regexp: true */
-/*global $, Vue */
+/*global $, Vue, VueRouter*/
 
 var substringMatcher = function (strs) {
     return function findMatches(q, cb) {
@@ -87,15 +87,20 @@ var substringMatcher = function (strs) {
                 {text: "et nulla", weight: 1},
                 {text: "Sed", weight: 1}
             ]
-        }}
+        }; }
     },
     compArborescence = {
         template : '#page-arborescence-template'
-    }
+    },
+    compAjout = {
+        template : '#page-ajout-template'
+    },
     routes = [
-      { path: '/recherche', component: compRecherche },
-      { path: '/tags', component: compTags },
-      { path: '/arborescence', component: compArborescence }
+        { path: '/recherche', component: compRecherche },
+        { path: '/tags', component: compTags },
+        { path: '/arborescence', component: compArborescence },
+        { path: '/ajout', component: compAjout },
+        { path: '*', redirect: '/recherche' }
     ],
     router = new VueRouter({
         routes : routes,
