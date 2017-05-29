@@ -13,6 +13,8 @@
         <!-- UIkit CSS -->
         <link rel="stylesheet" href="vendor/uikit.min.css" />
         <link rel="stylesheet" href="css/jqcloud.css" />
+        <link rel="stylesheet" href="vendor/tokenize2.css">
+        <link rel="stylesheet" href="vendor/jquery.fileuploader.css" />
         <link rel="stylesheet" href="css/styles.css" />
 
         <!-- jQuery is required -->
@@ -25,6 +27,9 @@
         <script src="vendor/vue-router.js"></script>
         <script src="vendor/jqcloud.min.js"></script>
         <script src="vendor/typeahead.min.js"></script>
+        <script src="vendor/tokenize2.js"></script>
+        <script src="vendor/jquery.fileuploader.min.js"></script>
+        <script src="js/donnees.js"></script>
         <script src="js/main.js"></script>
     </head>
     <body>
@@ -40,7 +45,7 @@
                     </ul>
                 </div> 
             </nav>
-            <div class="uk-container-small uk-align-center" id="">
+            <div class="uk-container-small uk-align-center">
                 <router-view></router-view>
             </div>
             
@@ -48,6 +53,10 @@
                 <!--{{ $data | json }}-->
             </div>
         </div>
+        <div class="uk-container-small uk-align-center">
+            
+        </div>
+            
         <script type="text/x-template" id="page-recherche-template">
             <div class="uk-margin uk-text-center">
                 <in-recherche v-on:change="lanceRecherche"></in-recherche><br>
@@ -74,25 +83,19 @@
                             <input class="uk-input" id="form-stacked-text" type="text" placeholder="Titre...">
                         </div>
                     </div>
-
+                    
                     <div class="uk-margin">
-                        <label class="uk-form-label" for="form-stacked-select">Select</label>
+                        <label class="uk-form-label" for="form-stacked-text">Tags</label>
                         <div class="uk-form-controls">
-                            <select class="uk-select" id="form-stacked-select">
-                                <option>Option 01</option>
-                                <option>Option 02</option>
-                            </select>
+                            <in-tags></in-tags>
                         </div>
                     </div>
-
                     <div class="uk-margin">
-                        <div class="uk-form-label">Radio</div>
+                        <label class="uk-form-label" for="form-stacked-text">Fichier</label>
                         <div class="uk-form-controls">
-                            <label><input class="uk-radio" type="radio" name="radio1"> Option 01</label><br>
-                            <label><input class="uk-radio" type="radio" name="radio1"> Option 02</label>
+                            <in-fichier></in-fichier>
                         </div>
                     </div>
-
                 </form>
             </div>
         </script>

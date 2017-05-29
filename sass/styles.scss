@@ -1,4 +1,5 @@
 @import 'in-recherche';
+@import 'in-tags';
 
 .uk-navbar-nav a.uk-active {
     color: #333333;
@@ -20,6 +21,16 @@
 #gedInstance .uk-sticky-placeholder:nth-child(2){
    display:none;
 }
+
+  .droppable {
+    background: #08c;
+    color: #fff;
+    padding: 100px 0;
+    text-align: center;
+  }
+  .droppable.dragover {
+    background: #00CC71;
+  }
 
 /*#navBar {
     top: 0;
