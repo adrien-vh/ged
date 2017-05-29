@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true, node: true, sloppy: true, regexp: true */
-/*global $, Vue, VueRouter, donnees*/
+/*global $, Vue, VueRouter, donnees, CKEDITOR */
 
 
 var substringMatcher = function (strs) {
@@ -42,7 +42,12 @@ var substringMatcher = function (strs) {
         template : '#page-arborescence-template'
     },
     compAjout = {
-        template : '#page-ajout-template'
+        template : '#page-ajout-template',
+        data : function () {
+            return {
+                isWiki : true
+            };
+        }
     },
     routes = [
         { path: '/recherche', component: compRecherche },
@@ -116,6 +121,11 @@ Vue.component('in-fichier', {
                           '</div>',
             theme: 'dragdrop',
             limit: 1,
+            thumbnails: {
+                onItemRemove: function (itemEl, listEl, parentEl, newInputEl, inputEl) {
+                    itemEl.remove();
+                }
+            },
             upload: {
                 url: 'http://www.gopala.fr/upload.php',
                 data: null,
@@ -189,6 +199,17 @@ Vue.component('in-fichier', {
                 removeConfirmation: 'Êtes-vous sûr de vouloir supprimer ce fichier ?'
             }
         });
+    }
+});
+
+Vue.component('in-wiki', {
+    template : '<textarea></textarea>',
+    mounted : function () {
+        console.log("ici");
+        this.id = "editor-" + Math.floor(1000 * Math.random());
+        $(this.$el).attr('id', this.id);
+        this.instance = CKEDITOR.replace(this.id);
+        //$(this.$el).ckeditor();
     }
 });
 

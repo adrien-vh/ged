@@ -11,24 +11,26 @@
         <title>Ged</title>
 
         <!-- UIkit CSS -->
-        <link rel="stylesheet" href="vendor/uikit.min.css" />
+        <link rel="stylesheet" href="vendor/uiKit/uikit.min.css" />
         <link rel="stylesheet" href="css/jqcloud.css" />
-        <link rel="stylesheet" href="vendor/tokenize2.css">
-        <link rel="stylesheet" href="vendor/jquery.fileuploader.css" />
+        <link rel="stylesheet" href="vendor/tokenize/tokenize2.css">
+        <link rel="stylesheet" href="vendor/fileUploader/jquery.fileuploader.css" />
         <link rel="stylesheet" href="css/styles.css" />
 
         <!-- jQuery is required -->
-        <script src="vendor/jquery.min.js"></script>
+        <script src="vendor/jQuery/jquery.min.js"></script>
 
         <!-- UIkit JS -->
-        <script src="vendor/uikit.js"></script>
-        <script src="vendor/uikit-icons.min.js"></script>
-        <script src="vendor/vue.min.js"></script>
-        <script src="vendor/vue-router.js"></script>
-        <script src="vendor/jqcloud.min.js"></script>
-        <script src="vendor/typeahead.min.js"></script>
-        <script src="vendor/tokenize2.js"></script>
-        <script src="vendor/jquery.fileuploader.min.js"></script>
+        <script src="vendor/uiKit/uikit.js"></script>
+        <script src="vendor/uiKit/uikit-icons.min.js"></script>
+        <script src="vendor/vue/vue.min.js"></script>
+        <script src="vendor/vue/vue-router.js"></script>
+        <script src="vendor/jqCloud/jqcloud.min.js"></script>
+        <script src="vendor/typeAhead/typeahead.min.js"></script>
+        <script src="vendor/tokenize/tokenize2.js"></script>
+        <script src="vendor/fileUploader/jquery.fileuploader.min.js"></script>
+        <script src="vendor/ckeditor/ckeditor.js"></script>
+        <script src="vendor/ckeditor/adapters/jquery.js"></script>
         <script src="js/donnees.js"></script>
         <script src="js/main.js"></script>
     </head>
@@ -90,10 +92,22 @@
                             <in-tags></in-tags>
                         </div>
                     </div>
-                    <div class="uk-margin">
+                    <div class="uk-margin-small">
+                        <div class="uk-button-group">
+                            <button class="uk-button uk-button-primary" v-bind:class="{ 'uk-active': !isWiki }" v-on:click="isWiki = false">Fichier</button>
+                            <button class="uk-button uk-button-primary" v-bind:class="{ 'uk-active': isWiki }" v-on:click="isWiki = true">Wiki</button>
+                        </div>
+                    </div>
+                    <div class="uk-margin" v-show="!isWiki">
                         <label class="uk-form-label" for="form-stacked-text">Fichier</label>
                         <div class="uk-form-controls">
                             <in-fichier></in-fichier>
+                        </div>
+                    </div>
+                    <div class="uk-margin" v-show="isWiki">
+                        <label class="uk-form-label" for="form-stacked-text">Wiki</label>
+                        <div class="uk-form-controls">
+                            <in-wiki></in-wiki>
                         </div>
                     </div>
                 </form>
