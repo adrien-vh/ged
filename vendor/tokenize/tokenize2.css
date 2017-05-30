@@ -137,6 +137,18 @@
     cursor: pointer;
 }
 
+.tokenize-dropdown > .dropdown-menu li > a {
+    /*cursor: pointer;*/
+    color: #0e6dcd;
+}
+.tokenize-dropdown > .dropdown-menu li > a:hover {
+    text-decoration: none;
+}
+
+.tokenize-dropdown > .dropdown-menu li:hover {
+    background-color: #0e6dcd;
+}
+
 .tokenize-dropdown > .dropdown-menu li > a .tokenize-highlight {
     font-weight: bold;
 }
@@ -155,5 +167,6 @@
 
 .tokenize-dropdown > .dropdown-menu li:not(.active) a:hover,
 .tokenize-dropdown > .dropdown-menu li:not(.active) a:focus {
+    
     background-color: transparent;
 }

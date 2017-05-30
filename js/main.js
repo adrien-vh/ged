@@ -38,6 +38,10 @@ var substringMatcher = function (strs) {
             tags: donnees.tags
         }; }
     },
+    compConfiguration = {
+        template: '#page-configuration-template',
+        data : function () { return {}; }
+    },
     compArborescence = {
         template : '#page-arborescence-template'
     },
@@ -64,6 +68,7 @@ var substringMatcher = function (strs) {
         { path: '/tags', component: compTags },
         { path: '/arborescence', component: compArborescence },
         { path: '/ajout', component: compAjout },
+        { path: '/configuration', component: compConfiguration },
         { path: '*', redirect: '/recherche' }
     ],
     router = new VueRouter({
@@ -94,7 +99,7 @@ Vue.component('in-recherche', {
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: 'http://192.168.1.198:8087/ajax/acRecherche.php?prefix=%QUERY',
+                    url: 'http://192.168.1.198:8087/server/acRecherche.php?prefix=%QUERY',
                     wildcard: '%QUERY',
                     transform : function (reponse) { return reponse.terms; }
                 }
@@ -123,6 +128,13 @@ Vue.component('in-tags', {
     template : '<select multiple></select>',
     mounted : function () {
         $(this.$el).tokenize2({tokensAllowCustom: true, dataSource: 'http://gopala.fr/donnees.php', searchFromStart : false});
+    }
+});
+
+Vue.component('in-utilisateur', {
+    template : '<select multiple></select>',
+    mounted : function () {
+        $(this.$el).tokenize2({tokensAllowCustom: false, dataSource: 'http://ged/server/listeUtilisateurs.php', searchFromStart : false, debounce : 200, tokensMaxItems : 1});
     }
 });
 
