@@ -45,7 +45,17 @@ var substringMatcher = function (strs) {
         template : '#page-ajout-template',
         data : function () {
             return {
-                isWiki : true
+                isWiki : true,
+                inWiki : '',
+                nomChemin1 : 'Catégorie',
+                choixChemin1 : [{id : 1, texte : 'Procédure'}, {id : 2, texte : 'Devis'}],
+                chemin1 : '',
+                nomChemin2 : 'Année',
+                choixChemin2 : [{id : 1, texte : '2016'}, {id : 2, texte : '2017'}, {id : 3, texte : '2018'}, {id : 4, texte : '2019'}],
+                chemin2 : '',
+                nomChemin3 : 'Prestataire',
+                choixChemin3 : [{id : 1, texte : 'Global Infos'}, {id : 2, texte : 'Inmac'}, {id : 3, texte : 'Bechtle'}],
+                chemin3 : ''
             };
         }
     },
@@ -203,12 +213,22 @@ Vue.component('in-fichier', {
 });
 
 Vue.component('in-wiki', {
-    template : '<textarea></textarea>',
+    template : '<textarea v-bind:value="value"></textarea>',
+    props: ['value'],
     mounted : function () {
         console.log("ici");
+        var me = this;
+        
         this.id = "editor-" + Math.floor(1000 * Math.random());
         $(this.$el).attr('id', this.id);
         this.instance = CKEDITOR.replace(this.id);
+        
+        this.instance.on('change', function () {
+            var html = me.instance.getData();
+            if (html !== me.value) {
+                me.$emit('input', html);
+            }
+        });
         //$(this.$el).ckeditor();
     }
 });

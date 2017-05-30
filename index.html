@@ -51,13 +51,13 @@
                 <router-view></router-view>
             </div>
             
-            <div id="dataJson">
-                <!--{{ $data | json }}-->
-            </div>
+            <!--<div id="dataJson">
+                {{ $data | json }}
+            </div>-->
         </div>
-        <div class="uk-container-small uk-align-center">
+        <!--<div class="uk-container-small uk-align-center">
             
-        </div>
+        </div>-->
             
         <script type="text/x-template" id="page-recherche-template">
             <div class="uk-margin uk-text-center">
@@ -78,7 +78,35 @@
         <script type="text/x-template" id="page-ajout-template">
             <div>
                 <form class="uk-form-stacked">
-
+                    <div uk-grid>
+                        <div>
+                            <label class="uk-form-label" for="form-horizontal-select">Catégorie</label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select" id="form-horizontal-select" v-model="chemin1">
+                                    <option disabled value="">Choisir une catégorie</option>
+                                    <option v-for="choix in choixChemin1" :value="choix.id">{{ choix.texte }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div v-show="chemin1 != ''">
+                            <label class="uk-form-label" for="form-horizontal-select">{{ nomChemin2 }}</label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select" id="form-horizontal-select" v-model="chemin2">
+                                    <option disabled value="">Choisir une catégorie</option>
+                                    <option v-for="choix in choixChemin2" :value="choix.id">{{ choix.texte }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div v-show="chemin2 != ''">
+                            <label class="uk-form-label" for="form-horizontal-select">{{ nomChemin3 }}</label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select" id="form-horizontal-select" v-model="chemin3">
+                                    <option disabled value="">Choisir une catégorie</option>
+                                    <option v-for="choix in choixChemin3" :value="choix.id">{{ choix.texte }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="uk-margin">
                         <label class="uk-form-label" for="form-stacked-text">Titre</label>
                         <div class="uk-form-controls">
@@ -94,8 +122,8 @@
                     </div>
                     <div class="uk-margin-small">
                         <div class="uk-button-group">
-                            <button class="uk-button uk-button-primary" v-bind:class="{ 'uk-active': !isWiki }" v-on:click="isWiki = false">Fichier</button>
-                            <button class="uk-button uk-button-primary" v-bind:class="{ 'uk-active': isWiki }" v-on:click="isWiki = true">Wiki</button>
+                            <button class="uk-button uk-button-primary uk-button-small" v-bind:class="{ 'uk-active': !isWiki }" v-on:click="isWiki = false">Fichier</button>
+                            <button class="uk-button uk-button-primary uk-button-small" v-bind:class="{ 'uk-active': isWiki }" v-on:click="isWiki = true">Wiki</button>
                         </div>
                     </div>
                     <div class="uk-margin" v-show="!isWiki">
@@ -107,7 +135,7 @@
                     <div class="uk-margin" v-show="isWiki">
                         <label class="uk-form-label" for="form-stacked-text">Wiki</label>
                         <div class="uk-form-controls">
-                            <in-wiki></in-wiki>
+                            <in-wiki v-model="inWiki"></in-wiki>
                         </div>
                     </div>
                 </form>
