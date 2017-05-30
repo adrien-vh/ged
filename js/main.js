@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true, node: true, sloppy: true, regexp: true */
-/*global $, Vue, VueRouter, donnees, CKEDITOR */
+/*global $, Vue, VueRouter, donnees, CKEDITOR, Bloodhound */
 
 
 var substringMatcher = function (strs) {
@@ -90,15 +90,18 @@ Vue.component('in-recherche', {
     template : '<input type="text" class="autocomplete">',
     mounted : function () {
         var me = this,
-		bestPictures = new Bloodhound({
-			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-			queryTokenizer: Bloodhound.tokenizers.whitespace,
-			prefetch: '../data/films/post_1960.json',
-			remote: {
-				url: '../data/films/queries/%QUERY.json',
-				wildcard: '%QUERY'
-			}
-		});
+            bestPictures = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: 'http://192.168.1.198:9090/services/rest/index/Fichier/autocompletion/autocomplete?prefix=%QUERY',
+                    wildcard: '%QUERY',
+                    transform : function (reponse) {
+                        console.log(reponse);
+                        return reponse;
+                    }
+                }
+            });
         $(this.$el).typeahead(
             {
                 hint: true,
@@ -106,8 +109,8 @@ Vue.component('in-recherche', {
                 minLength: 1
             },
             {
-                name: 'states',
-                source: substringMatcher(donnees.states)
+                name: 'recherche',
+                source: bestPictures
             }
         ).on('typeahead:select', function (event, suggession) {
             me.$emit('change', suggession);
