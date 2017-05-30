@@ -90,16 +90,13 @@ Vue.component('in-recherche', {
     template : '<input type="text" class="autocomplete">',
     mounted : function () {
         var me = this,
-            bestPictures = new Bloodhound({
+            rechercheAc = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: 'http://192.168.1.198:9090/services/rest/index/Fichier/autocompletion/autocomplete?prefix=%QUERY',
+                    url: 'http://192.168.1.198:8087/ajax/acRecherche.php?prefix=%QUERY',
                     wildcard: '%QUERY',
-                    transform : function (reponse) {
-                        console.log(reponse);
-                        return reponse;
-                    }
+                    transform : function (reponse) { return reponse.terms; }
                 }
             });
         $(this.$el).typeahead(
@@ -110,7 +107,7 @@ Vue.component('in-recherche', {
             },
             {
                 name: 'recherche',
-                source: bestPictures
+                source: rechercheAc
             }
         ).on('typeahead:select', function (event, suggession) {
             me.$emit('change', suggession);
