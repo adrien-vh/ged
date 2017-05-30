@@ -89,7 +89,16 @@ Vue.component('nuage-tags', {
 Vue.component('in-recherche', {
     template : '<input type="text" class="autocomplete">',
     mounted : function () {
-        var me = this;
+        var me = this,
+		bestPictures = new Bloodhound({
+			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+			queryTokenizer: Bloodhound.tokenizers.whitespace,
+			prefetch: '../data/films/post_1960.json',
+			remote: {
+				url: '../data/films/queries/%QUERY.json',
+				wildcard: '%QUERY'
+			}
+		});
         $(this.$el).typeahead(
             {
                 hint: true,
