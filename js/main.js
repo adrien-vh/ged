@@ -2,28 +2,87 @@
 /*global $, Vue, VueRouter, donnees, CKEDITOR, Bloodhound */
 
 
-var substringMatcher = function (strs) {
-    return function findMatches(q, cb) {
-        var matches, substrRegex;
-
-        // an array that will be populated with substring matches
-        matches = [];
-
-        // regex used to determine if a string contains the substring `q`
-        substrRegex = new RegExp(q, 'i');
-
-        // iterate through the pool of strings and for any string that
-        // contains the substring `q`, add it to the `matches` array
-        $.each(strs, function (i, str) {
-            if (substrRegex.test(str)) {
-                matches.push(str);
-            }
+var utilisateur = {
+        loggedIn : false,
+        num_utilisateur : 0,
+        nom : ""
+    },
+    serverPrefix = "http://ged/",
+    router,
+    serverCall = function (url, p1, p2) {
+        //$.post(serverPrefix + url, data, callback, "json");
+        p1 = p1 || {};
+        p2 = p2 || function () {};
+        
+        var data = $.isFunction(p1) ? {} : p1,
+            callback = $.isFunction(p1) ? p1 : p2;
+        $.ajax({
+            type : "POST",
+            url : serverPrefix + url,
+            data : data,
+            success : callback,
+            dataType : "json",
+            crossDomain: true,
+            xhrFields: { withCredentials: true }
         });
+    },
+    substringMatcher = function (strs) {
+        return function findMatches(q, cb) {
+            var matches, substrRegex;
 
-        cb(matches);
-    };
-},
-    
+            // an array that will be populated with substring matches
+            matches = [];
+
+            // regex used to determine if a string contains the substring `q`
+            substrRegex = new RegExp(q, 'i');
+
+            // iterate through the pool of strings and for any string that
+            // contains the substring `q`, add it to the `matches` array
+            $.each(strs, function (i, str) {
+                if (substrRegex.test(str)) {
+                    matches.push(str);
+                }
+            });
+
+            cb(matches);
+        };
+    },
+    compLogin = {
+        template: '#page-login-template',
+        data : function () { return {
+            login : "",
+            password : "",
+            loginEnCours : false,
+            loginValide : true
+        }; },
+        methods: {
+            onSubmit : function () {
+                var me = this;
+                
+                if (!me.loginEnCours) {
+                    me.loginEnCours = true;
+                    serverCall(
+                        'server/auth.php',
+                        { login : me.login, password : me.password },
+                        function (data) {
+                            console.log(data);
+                            if (data.loginValide) {
+                                utilisateur.loggedIn = true;
+                                utilisateur.nom = data.nom;
+                                utilisateur.num_utilisateur = data.num_utilisateur;
+                                router.push('/');
+                            } else {
+                                me.loginValide = false;
+                            }
+                            me.loginEnCours = false;
+                        }
+                    );
+                }
+                
+            }
+        }
+        
+    },
     compRecherche = {
         template: '#page-recherche-template',
         methods: {
@@ -64,17 +123,30 @@ var substringMatcher = function (strs) {
         }
     },
     routes = [
+        { path: '/login', component: compLogin },
         { path: '/recherche', component: compRecherche },
         { path: '/tags', component: compTags },
         { path: '/arborescence', component: compArborescence },
         { path: '/ajout', component: compAjout },
         { path: '/configuration', component: compConfiguration },
         { path: '*', redirect: '/recherche' }
-    ],
-    router = new VueRouter({
-        routes : routes,
-        linkActiveClass : 'uk-active'
-    });
+    ];
+
+router = new VueRouter({
+    routes : routes,
+    linkActiveClass : 'uk-active'
+
+});
+
+router.beforeEach(function (to, from, next) {
+    if (!utilisateur.loggedIn && to.path !== '/login') {
+        next("/login");
+    } else if (utilisateur.loggedIn && to.path === '/login') {
+        next("/");
+    } else {
+        next();
+    }
+});
 
 Vue.component('nuage-tags', {
     props: ['tags'],
@@ -99,7 +171,7 @@ Vue.component('in-recherche', {
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: 'http://192.168.1.198:8087/server/acRecherche.php?prefix=%QUERY',
+                    url: 'http://ged/server/acRecherche.php?prefix=%QUERY',
                     wildcard: '%QUERY',
                     transform : function (reponse) { return reponse.terms; }
                 }
@@ -255,8 +327,32 @@ Vue.component('in-wiki', {
 });
 
 $(function () {
+    
+    //$.get(serverPrefix + "server/isConnected.php", function (data) { console.log("data"); });
     var viewmodel = new Vue({
+        data : {
+            utilisateur : utilisateur
+        },
         router : router,
-        el: '#gedInstance'
+        el: '#gedInstance',
+        methods : {
+            onDisconnect : function () {
+                serverCall("server/disconnect.php");
+                utilisateur.loggedIn = false;
+                router.push("/login");
+                console.log("ici");
+            }
+        },
+        mounted : function () {
+            serverCall("server/isConnected.php", function (data) {
+                if (data.connecte) {
+                    utilisateur.loggedIn = true;
+                    utilisateur.nom = data.nom;
+                    utilisateur.num_utilisateur = data.num_utilisateur;
+                    router.push("/");
+                }
+                console.log(data);
+            });
+        }
     });
 });

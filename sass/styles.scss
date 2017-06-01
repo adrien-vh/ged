@@ -9,6 +9,14 @@
     }
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
+
+
 #dataJson {
     position: fixed;
     bottom: 0;
@@ -20,6 +28,46 @@
 
 #gedInstance .uk-sticky-placeholder:nth-child(2){
    display:none;
+}
+
+#contLogin {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: #fafafa;
+    top: 0;
+    left: 0;
+    padding-top: 200px;
+    
+    
+    & > div {  
+        
+        border: 1px solid #0f7ae5;
+        max-width: 300px;
+        background-color: #ffffff;
+        
+        -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.38);
+        -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.38);
+        box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.38);
+        
+        form {
+            padding: 10px;
+        }
+        
+        .titre-login {
+            text-align: center;
+            background-color: #0f7ae5;
+            color: #ffffff;
+            font-size: 18px;
+            padding: 15px 5px;
+            margin-bottom: 20px;
+        }
+        
+        .cont-bout-connexion {
+            text-align: center;
+            padding: 20px 0;
+        }
+    }
 }
 
   .droppable {

@@ -45,7 +45,14 @@
                         <li><router-link to="/ajout">Ajout</router-link></li>
                         <li><router-link to="/configuration">Configuration</router-link></li>
                     </ul>
-                </div> 
+                    
+                </div>
+                <div class="uk-navbar-right">
+                    <div class="uk-navbar-item">
+                        {{ utilisateur.nom }} &nbsp;
+                        <a href="#" v-on:click="onDisconnect">[Déconnexion]</a>
+                    </div>
+                </div>
             </nav>
             <div class="uk-container-small uk-align-center">
                 <router-view></router-view>
@@ -59,6 +66,35 @@
             
         </div>-->
             
+        <script type="text/x-template" id="page-login-template">
+            <div id="contLogin">
+                <div class="uk-container-small uk-align-center">
+                    <div class="titre-login">CONNEXION</div>
+                    <form class="uk-form-stacked" v-on:submit.prevent="onSubmit" action="foo">
+                        <div>
+                            <label class="uk-form-label">Login</label>
+                            <div class="uk-form-controls">
+                                <input class="uk-input" type="text" placeholder="Login..." v-model="login">
+                            </div>
+                            <label class="uk-form-label">Mot de passe</label>
+                            <div class="uk-form-controls">
+                                <input class="uk-input" type="password" placeholder="Mot de passe..." v-model="password">
+                            </div>
+                            <div class="cont-bout-connexion">
+                                <div uk-spinner v-show="loginEnCours"></div>
+                                <button class="uk-button uk-button-primary" v-on:click="onSubmit" v-show="!loginEnCours">Se Connecter</button>
+                            </div>
+                            <transition name="fade">
+                                <div class="uk-alert-danger" uk-alert v-if="!loginValide && !loginEnCours">
+                                    <p>Informations de connexion incorrectes !</p>
+                                </div>
+                            </transition>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </script> 
+        
         <script type="text/x-template" id="page-recherche-template">
             <div class="uk-margin uk-text-center">
                 <in-recherche v-on:change="lanceRecherche"></in-recherche><br>
