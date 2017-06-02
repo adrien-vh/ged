@@ -3,6 +3,7 @@
 
 
 var utilisateur = {
+        informationsRecuperees : false,
         loggedIn : false,
         num_utilisateur : 0,
         nom : ""
@@ -88,6 +89,9 @@ var utilisateur = {
         methods: {
             lanceRecherche : function (texte) {
                 console.log(texte);
+                serverCall('server/recherche.php', { query : texte }, function (data) {
+                    console.log(data);
+                });
             }
         }
     },
@@ -99,7 +103,69 @@ var utilisateur = {
     },
     compConfiguration = {
         template: '#page-configuration-template',
-        data : function () { return {}; }
+        data : function () { return {
+            categories : [],
+            types : [],
+            nouvelleCategorie : "",
+            nouveauType : "",
+            nouvelUtilisateur : "",
+            utilisateurs : []
+        }; },
+        methods: {
+            majUtilisateur : function (utilisateur, e) {
+                e.preventDefault();
+                console.log("ici");
+                utilisateur.niveau += 1;
+                utilisateur.niveau %= 3;
+            },
+            loadTypes : function (data) {
+                var i;
+                for (i = 0; i < data.length; i += 1) {
+                    data[i].categories = data[i].categories.split(',');
+                    if (data[i].categories.length === 1 && data[i].categories[0] === '') {
+                        data[i].categories = [];
+                    }
+                }
+                this.types = data;
+            },
+            submitCategorie : function () {
+                var me = this;
+                serverCall("server/ajoutCategorie.php", { nom : this.nouvelleCategorie }, function () {
+                    me.nouvelleCategorie = "";
+                    serverCall("server/listeCategories.php", function (data) { me.categories = data; });
+                });
+            },
+            submitType : function () {
+                var me = this;
+                serverCall("server/ajoutType.php", { nom : this.nouveauType }, function () {
+                    me.nouveauType = "";
+                    serverCall("server/listeTypes.php", function (data) { me.loadTypes(data); });
+                });
+            },
+            submitCategorieType  : function (type, e) {
+                e.preventDefault();
+                var me = this;
+                serverCall('server/ajoutCategorieType.php', {num_tagType : type.num_tag, num_categorie : type.nouvelleCategorie}, function () {
+                    serverCall("server/listeTypes.php", function (data) {me.loadTypes(data); });
+                });
+                //console.log(type);
+            },
+            submitUtilisateur : function () {
+                console.log(this.nouvelUtilisateur);
+                console.log("submitUtilisateur");
+                var me = this;
+                serverCall('server/ajoutUtilisateur.php', {num_utilisateur : this.nouvelUtilisateur}, function () {
+                    serverCall("server/listeUtilisateursActifs.php", function (data) {me.utilisateurs = data; });
+                    me.nouvelUtilisateur = "";
+                });
+            }
+        },
+        mounted: function () {
+            var me = this;
+            serverCall("server/listeCategories.php", function (data) { me.categories = data; });
+            serverCall("server/listeTypes.php", function (data) {me.loadTypes(data); });
+            serverCall("server/listeUtilisateursActifs.php", function (data) {me.utilisateurs = data; });
+        }
     },
     compArborescence = {
         template : '#page-arborescence-template'
@@ -204,9 +270,19 @@ Vue.component('in-tags', {
 });
 
 Vue.component('in-utilisateur', {
-    template : '<select multiple></select>',
+    template : '<select multiple v-bind:value="value"></select>',
+    props : ['value', 'inactifs'],
     mounted : function () {
-        $(this.$el).tokenize2({tokensAllowCustom: false, dataSource: 'http://ged/server/listeUtilisateurs.php', searchFromStart : false, debounce : 200, tokensMaxItems : 1});
+        var me = this,
+            source = typeof this.inactifs === "undefined" ? "http://ged/server/listeUtilisateurs.php" : "http://ged/server/listeUtilisateurs.php?inactifs=true";
+        
+        $(this.$el).tokenize2({tokensAllowCustom: false, dataSource: source, searchFromStart : false, debounce : 200, tokensMaxItems : 1});
+        $(this.$el).on('tokenize:tokens:add', function (e, value) { me.$emit('input', value); });
+    },
+    watch : {
+        value : function (value) {
+            if (value === '') { $(this.$el).tokenize2().trigger('tokenize:clear'); }
+        }
     }
 });
 
@@ -329,30 +405,31 @@ Vue.component('in-wiki', {
 $(function () {
     
     //$.get(serverPrefix + "server/isConnected.php", function (data) { console.log("data"); });
-    var viewmodel = new Vue({
-        data : {
-            utilisateur : utilisateur
-        },
-        router : router,
-        el: '#gedInstance',
-        methods : {
-            onDisconnect : function () {
-                serverCall("server/disconnect.php");
-                utilisateur.loggedIn = false;
-                router.push("/login");
-                console.log("ici");
-            }
-        },
-        mounted : function () {
-            serverCall("server/isConnected.php", function (data) {
-                if (data.connecte) {
-                    utilisateur.loggedIn = true;
-                    utilisateur.nom = data.nom;
-                    utilisateur.num_utilisateur = data.num_utilisateur;
-                    router.push("/");
-                }
-                console.log(data);
-            });
+    var viewmodel;
+
+    serverCall("server/isConnected.php", function (data) {
+        if (data.connecte) {
+            utilisateur.informationsRecuperees = true;
+            utilisateur.loggedIn = true;
+            utilisateur.nom = data.nom;
+            utilisateur.num_utilisateur = data.num_utilisateur;
+            //console.log(router);
         }
+        console.log(data);
+        viewmodel = new Vue({
+            data : {
+                utilisateur : utilisateur
+            },
+            router : router,
+            el: '#gedInstance',
+            methods : {
+                onDisconnect : function () {
+                    serverCall("server/disconnect.php");
+                    utilisateur.loggedIn = false;
+                    router.push("/login");
+                    console.log("ici");
+                }
+            }
+        });
     });
 });
