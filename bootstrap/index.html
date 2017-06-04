@@ -37,7 +37,7 @@
   <body>
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -59,16 +59,31 @@
       </div>
     </nav>
 
-    <div class="container">
-
-      <div class="starter-template">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Rechercher...">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
-            </span>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 contenu">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Rechercher...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </span>
+                </div>
+                <div id="searchResults" class="mt-5">
+                    <div class="search-result">
+                        <div class="type-doc">pdf</div>
+                        <div class="header">
+                            <span class="titre">Procédure de création d'un utilisateur</span>
+                        </div>
+                        <div class="content">
+                            C'est une <b>procé</b>dure qui explique comment créer un utilisateur.
+                        </div>
+                        <div class="footer">
+                            Auteur : <b>Jean-Claude Dus</b> Création : <b>18/05/2015</b> Modification : <b>19/05/2016</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
 
     </div><!-- /.container -->
 

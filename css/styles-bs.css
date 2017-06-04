@@ -68,487 +68,522 @@
   font-weight: 800;
   font-style: italic;
 }
-/* line 3, ../sass/styles-bs.scss */
+/* line 4, ../sass/styles-bs.scss */
 body {
   font-family: 'Open Sans', sans-serif;
+  padding-top: 50px;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 10, ../sass/styles-bs.scss */
+.contenu {
+  padding: 40px 15px;
+}
+
+/* line 15, ../sass/styles-bs.scss */
+#searchResults {
+  position: relative;
+}
+/* line 20, ../sass/styles-bs.scss */
+#searchResults .search-result {
+  -moz-border-radius: 4px / 4px;
+  -webkit-border-radius: 4px 4px;
+  border-radius: 4px / 4px;
+  padding: 15px 15px 15px 50px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+/* line 27, ../sass/styles-bs.scss */
+#searchResults .type-doc {
+  -moz-border-radius: 4px 0px 0px 4px / 4px 0px 0px 4px;
+  -webkit-border-radius: 4px 4px;
+  border-radius: 4px 0px 0px 4px / 4px 0px 0px 4px;
+  padding-top: 15px;
+  color: #ffffff;
+  text-align: center;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 40px;
+  background-color: red;
+  height: calc(100% - 2px);
+}
+
+/* line 77, ../sass/styles-bs.scss */
 .m-0 {
   margin: 0 0 !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .mt-0 {
   margin-top: 0 !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .mr-0 {
   margin-right: 0 !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .mb-0 {
   margin-bottom: 0 !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .ml-0 {
   margin-left: 0 !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .mx-0 {
   margin-right: 0 !important;
   margin-left: 0 !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .my-0 {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .m-1 {
   margin: 0.25rem 0.25rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .mt-1 {
   margin-top: 0.25rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .mr-1 {
   margin-right: 0.25rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .mb-1 {
   margin-bottom: 0.25rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .ml-1 {
   margin-left: 0.25rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .mx-1 {
   margin-right: 0.25rem !important;
   margin-left: 0.25rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .my-1 {
   margin-top: 0.25rem !important;
   margin-bottom: 0.25rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .m-2 {
   margin: 0.5rem 0.5rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .mt-2 {
   margin-top: 0.5rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .mr-2 {
   margin-right: 0.5rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .mb-2 {
   margin-bottom: 0.5rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .ml-2 {
   margin-left: 0.5rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .mx-2 {
   margin-right: 0.5rem !important;
   margin-left: 0.5rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .my-2 {
   margin-top: 0.5rem !important;
   margin-bottom: 0.5rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .m-3 {
   margin: 1rem 1rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .mt-3 {
   margin-top: 1rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .mr-3 {
   margin-right: 1rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .mb-3 {
   margin-bottom: 1rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .ml-3 {
   margin-left: 1rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .mx-3 {
   margin-right: 1rem !important;
   margin-left: 1rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .my-3 {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .m-4 {
   margin: 1.5rem 1.5rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .mt-4 {
   margin-top: 1.5rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .mr-4 {
   margin-right: 1.5rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .mb-4 {
   margin-bottom: 1.5rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .ml-4 {
   margin-left: 1.5rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .mx-4 {
   margin-right: 1.5rem !important;
   margin-left: 1.5rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .my-4 {
   margin-top: 1.5rem !important;
   margin-bottom: 1.5rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .m-5 {
   margin: 3rem 3rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .mt-5 {
   margin-top: 3rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .mr-5 {
   margin-right: 3rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .mb-5 {
   margin-bottom: 3rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .ml-5 {
   margin-left: 3rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .mx-5 {
   margin-right: 3rem !important;
   margin-left: 3rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .my-5 {
   margin-top: 3rem !important;
   margin-bottom: 3rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .p-0 {
   padding: 0 0 !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .pt-0 {
   padding-top: 0 !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .pr-0 {
   padding-right: 0 !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .pb-0 {
   padding-bottom: 0 !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .pl-0 {
   padding-left: 0 !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .px-0 {
   padding-right: 0 !important;
   padding-left: 0 !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .py-0 {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .p-1 {
   padding: 0.25rem 0.25rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .pt-1 {
   padding-top: 0.25rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .pr-1 {
   padding-right: 0.25rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .pb-1 {
   padding-bottom: 0.25rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .pl-1 {
   padding-left: 0.25rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .px-1 {
   padding-right: 0.25rem !important;
   padding-left: 0.25rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .py-1 {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .p-2 {
   padding: 0.5rem 0.5rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .pt-2 {
   padding-top: 0.5rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .pr-2 {
   padding-right: 0.5rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .pb-2 {
   padding-bottom: 0.5rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .pl-2 {
   padding-left: 0.5rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .px-2 {
   padding-right: 0.5rem !important;
   padding-left: 0.5rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .py-2 {
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .p-3 {
   padding: 1rem 1rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .pt-3 {
   padding-top: 1rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .pr-3 {
   padding-right: 1rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .pb-3 {
   padding-bottom: 1rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .pl-3 {
   padding-left: 1rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .px-3 {
   padding-right: 1rem !important;
   padding-left: 1rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .py-3 {
   padding-top: 1rem !important;
   padding-bottom: 1rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .p-4 {
   padding: 1.5rem 1.5rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .pt-4 {
   padding-top: 1.5rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .pr-4 {
   padding-right: 1.5rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .pb-4 {
   padding-bottom: 1.5rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .pl-4 {
   padding-left: 1.5rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .px-4 {
   padding-right: 1.5rem !important;
   padding-left: 1.5rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .py-4 {
   padding-top: 1.5rem !important;
   padding-bottom: 1.5rem !important;
 }
 
-/* line 44, ../sass/styles-bs.scss */
+/* line 77, ../sass/styles-bs.scss */
 .p-5 {
   padding: 3rem 3rem !important;
 }
 
-/* line 45, ../sass/styles-bs.scss */
+/* line 78, ../sass/styles-bs.scss */
 .pt-5 {
   padding-top: 3rem !important;
 }
 
-/* line 46, ../sass/styles-bs.scss */
+/* line 79, ../sass/styles-bs.scss */
 .pr-5 {
   padding-right: 3rem !important;
 }
 
-/* line 47, ../sass/styles-bs.scss */
+/* line 80, ../sass/styles-bs.scss */
 .pb-5 {
   padding-bottom: 3rem !important;
 }
 
-/* line 48, ../sass/styles-bs.scss */
+/* line 81, ../sass/styles-bs.scss */
 .pl-5 {
   padding-left: 3rem !important;
 }
 
-/* line 49, ../sass/styles-bs.scss */
+/* line 82, ../sass/styles-bs.scss */
 .px-5 {
   padding-right: 3rem !important;
   padding-left: 3rem !important;
 }
 
-/* line 53, ../sass/styles-bs.scss */
+/* line 86, ../sass/styles-bs.scss */
 .py-5 {
   padding-top: 3rem !important;
   padding-bottom: 3rem !important;
 }
 
-/* line 61, ../sass/styles-bs.scss */
+/* line 94, ../sass/styles-bs.scss */
 .m-auto {
   margin: auto !important;
 }
 
-/* line 62, ../sass/styles-bs.scss */
+/* line 95, ../sass/styles-bs.scss */
 .mt-auto {
   margin-top: auto !important;
 }
 
-/* line 63, ../sass/styles-bs.scss */
+/* line 96, ../sass/styles-bs.scss */
 .mr-auto {
   margin-right: auto !important;
 }
 
-/* line 64, ../sass/styles-bs.scss */
+/* line 97, ../sass/styles-bs.scss */
 .mb-auto {
   margin-bottom: auto !important;
 }
 
-/* line 65, ../sass/styles-bs.scss */
+/* line 98, ../sass/styles-bs.scss */
 .ml-auto {
   margin-left: auto !important;
 }
 
-/* line 66, ../sass/styles-bs.scss */
+/* line 99, ../sass/styles-bs.scss */
 .mx-auto {
   margin-right: auto !important;
   margin-left: auto !important;
 }
 
-/* line 70, ../sass/styles-bs.scss */
+/* line 103, ../sass/styles-bs.scss */
 .my-auto {
   margin-top: auto !important;
   margin-bottom: auto !important;
