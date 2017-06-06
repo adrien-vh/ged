@@ -172,21 +172,53 @@ var utilisateur = {
         template : '#page-arborescence-template'
     },
     compAjout = {
+        methods : {
+            chargeCategories : function () {
+                var me = this;
+                serverCall("server/listeCategoriesType.php?num_tagType=" + me.type, function (data) {
+                    me.categories = $.map(data, function (cat) { return $.extend({valeurChoisie : '', estValide : true}, cat); });
+                });
+            },
+            sauve : function () {
+                var infos = {}, i;
+                infos.num_tagType = this.type;
+                infos.categories = [];
+                for (i = 0; i < this.categories.length; i += 1) {
+                    infos.categories[i] = {};
+                    infos.categories[i].num_categorie = this.categories[i].num_categorie;
+                    infos.categories[i].valeurChoisie = this.categories[i].valeurChoisie;
+                }
+                infos.titre = this.titre;
+                infos.tags = this.tags;
+                infos.isWiki = this.isWiki;
+                if (this.isWiki) {
+                    infos.inWiki = this.inWiki;
+                } else {
+                    infos.inFichier = this.inFichier;
+                }
+                
+                serverCall("server/ajout.php", infos);
+                
+                console.log(infos);
+                //console.log(this.categories[0].valeurChoisie);
+            }
+        },
         template : '#page-ajout-template',
         data : function () {
             return {
-                isWiki : true,
+                isWiki : false,
                 inWiki : '',
-                nomChemin1 : 'Catégorie',
-                choixChemin1 : [{id : 1, texte : 'Procédure'}, {id : 2, texte : 'Devis'}],
-                chemin1 : '',
-                nomChemin2 : 'Année',
-                choixChemin2 : [{id : 1, texte : '2016'}, {id : 2, texte : '2017'}, {id : 3, texte : '2018'}, {id : 4, texte : '2019'}],
-                chemin2 : '',
-                nomChemin3 : 'Prestataire',
-                choixChemin3 : [{id : 1, texte : 'Global Infos'}, {id : 2, texte : 'Inmac'}, {id : 3, texte : 'Bechtle'}],
-                chemin3 : ''
+                inFichier : {},
+                types : [],
+                type : '',
+                categories : [],
+                titre : '',
+                tags : ''
             };
+        },
+        mounted: function () {
+            var me = this;
+            serverCall("server/listeTags.php?num_categorie=0", function (data) { me.types = data; });
         }
     },
     routes = [
@@ -265,8 +297,17 @@ Vue.component('in-recherche', {
 
 Vue.component('in-tags', {
     template : '<select multiple></select>',
+    props : ["value"],
     mounted : function () {
-        $(this.$el).tokenize2({tokensAllowCustom: true, dataSource: 'http://gopala.fr/donnees.php', searchFromStart : false});
+        var me = this;
+        $(this.$el).tokenize2({tokensAllowCustom: true, dataSource: "http://ged/server/listeTags.php?tokenize2=true", searchFromStart : false});
+        $(this.$el).on('tokenize:tokens:add', function (e, value) {
+            var retour = [];
+            $(me.$el).next().find("li.token").each(function () {
+                retour.push($(this).find("span").html());
+            });
+            me.$emit('input', retour);
+        });
     }
 });
 
@@ -287,8 +328,26 @@ Vue.component('in-utilisateur', {
     }
 });
 
+Vue.component('in-tag-categorie', {
+    template : '<select multiple v-bind:value="value"></select>',
+    props : ['value', 'num_categorie'],
+    mounted : function () {
+        var me = this,
+            source = "http://ged/server/listeTags.php?num_categorie=" + me.num_categorie;
+        
+        $(this.$el).tokenize2({tokensAllowCustom: true, dataSource: source, searchFromStart : false, debounce : 200, tokensMaxItems : 1});
+        $(this.$el).on('tokenize:tokens:add', function (e, value) { me.$emit('input', value); });
+    },
+    watch : {
+        value : function (value) {
+            if (value === '') { $(this.$el).tokenize2().trigger('tokenize:clear'); }
+        }
+    }
+});
+
 Vue.component('in-fichier', {
-    template : '<form action="http://www.gopala.fr/upload.php" method="post" enctype="multipart/form-data"><input type="file" name="files"></form>',
+    template : '<form action="http://ged/server/upload.php" method="post" enctype="multipart/form-data"><input type="file" name="files"></form>',
+    props : ['value'],
     mounted : function () {
         var me = this;
         
@@ -307,7 +366,7 @@ Vue.component('in-fichier', {
                 }
             },
             upload: {
-                url: 'http://www.gopala.fr/upload.php',
+                url: 'http://ged/server/upload.php',
                 data: null,
                 type: 'POST',
                 enctype: 'multipart/form-data',
@@ -337,6 +396,10 @@ Vue.component('in-fichier', {
                     setTimeout(function () {
                         item.html.find('.progress-bar2').fadeOut(400);
                     }, 400);
+                    
+                    me.$emit('input', { file : data[0].old_name, fileName : data[0].old_name });
+                    
+                    //console.log(data[0].name + " " + data[0].old_name);
                 },
                 onError: function (item) {
                     var progressBar = item.html.find('.progress-bar2');
@@ -366,9 +429,10 @@ Vue.component('in-fichier', {
             },
             onRemove: function (item) {
                 $(me.$el).find('.fileuploader-input').show();
-                $.post('http://www.gopala.fr/remove.php', {
+                me.$emit('input', { file : "", fileName : "" });
+                /*$.post('http://ged/server/supprimeFichier.php', {
                     file: item.name
-                });
+                });*/
             },
             beforeSelect: function (files, listEl, parentEl, newInputEl, inputEl) {
                 console.log(newInputEl);
