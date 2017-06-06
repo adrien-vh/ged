@@ -1,20 +1,42 @@
+@import "compass/css3/border-radius";
+@import "spacers";
+@import "police";
+@import "copic";
+@import "page-login";
+@import "searchResults";
 @import 'in-recherche';
 @import 'in-tags';
 
-.uk-navbar-nav a.uk-active {
-    color: #333333;
-    pointer-events: none;
-    &:focus {
-        color: #333333;
+html {
+    margin:0;
+    padding:0;
+    background: url(../images/bg2.jpg) no-repeat center fixed; 
+    background-color: #eee;
+    -webkit-background-size: cover; /* pour anciens Chrome et Safari */
+    background-size: cover; /* version standardisée */
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 50px;
+    background-color: transparent;
+    height: 100%;
+    margin: 0;
+}
+
+#gedInstance {
+    min-height: 100%;
+    &.gris {
+        background-color: #eeeeee;    
     }
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s
+.contenu {
+    padding: 40px 15px;    
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0
-}
+
 
 
 #dataJson {
@@ -26,59 +48,9 @@
     font-size: 12px;
 }
 
-#gedInstance .uk-sticky-placeholder:nth-child(2){
+/*#gedInstance .uk-sticky-placeholder:nth-child(2){
    display:none;
-}
-
-#contLogin {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: #fafafa;
-    top: 0;
-    left: 0;
-    padding-top: 200px;
-    
-    
-    & > div {  
-        
-        border: 1px solid #0f7ae5;
-        max-width: 300px;
-        background-color: #ffffff;
-        
-        -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.38);
-        -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.38);
-        box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.38);
-        
-        form {
-            padding: 10px;
-        }
-        
-        .titre-login {
-            text-align: center;
-            background-color: #0f7ae5;
-            color: #ffffff;
-            font-size: 18px;
-            padding: 15px 5px;
-            margin-bottom: 20px;
-        }
-        
-        .cont-bout-connexion {
-            text-align: center;
-            padding: 20px 0;
-        }
-    }
-}
-
-  .droppable {
-    background: #08c;
-    color: #fff;
-    padding: 100px 0;
-    text-align: center;
-  }
-  .droppable.dragover {
-    background: #00CC71;
-  }
+}*/
 
 /*#navBar {
     top: 0;

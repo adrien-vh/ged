@@ -157,7 +157,7 @@
                 }
             }, this));
 
-        this.tokensContainer = $('<ul class="tokens-container form-control uk-input" />')
+        this.tokensContainer = $('<ul class="tokens-container form-control" />')
             .addClass(this.element.attr('data-class'))
             .attr('tabindex', this.options.tabIndex)
             .append(this.searchContainer.append(this.input));

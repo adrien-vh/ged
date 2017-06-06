@@ -1,5 +1,12 @@
 $largeur: 430px;
 
+#inRecherche {
+    .twitter-typeahead {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
+
 input.autocomplete {
     width: $largeur;
     box-sizing: border-box;

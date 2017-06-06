@@ -109,7 +109,8 @@ var utilisateur = {
             nouvelleCategorie : "",
             nouveauType : "",
             nouvelUtilisateur : "",
-            utilisateurs : []
+            utilisateurs : [],
+            pageActive : 1
         }; },
         methods: {
             majUtilisateur : function (utilisateur, e) {
@@ -200,7 +201,7 @@ var utilisateur = {
 
 router = new VueRouter({
     routes : routes,
-    linkActiveClass : 'uk-active'
+    linkActiveClass : 'active'
 
 });
 
@@ -230,7 +231,7 @@ Vue.component('nuage-tags', {
 });
 
 Vue.component('in-recherche', {
-    template : '<input type="text" class="autocomplete">',
+    template : '<div class="input-group" id="inRecherche"><input type="text" class="form-control" placeholder="Rechercher..."><span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button></span></div>',
     mounted : function () {
         var me = this,
             rechercheAc = new Bloodhound({
@@ -242,7 +243,7 @@ Vue.component('in-recherche', {
                     transform : function (reponse) { return reponse.terms; }
                 }
             });
-        $(this.$el).typeahead(
+        $(this.$el).find("input").typeahead(
             {
                 hint: true,
                 highlight: true,
