@@ -6,6 +6,7 @@
 @import "searchResults";
 @import 'in-recherche';
 @import 'in-tags';
+@import 'affichageDoc';
 
 html {
     margin:0;
@@ -24,6 +25,10 @@ body {
     background-color: transparent;
     height: 100%;
     margin: 0;
+}
+
+.texteGris {
+    color: $CN4;
 }
 
 #gedInstance {

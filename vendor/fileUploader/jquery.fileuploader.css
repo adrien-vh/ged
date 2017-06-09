@@ -32,6 +32,10 @@
     overflow: hidden;
 }
 
+.fileuploader.has-error {
+    background: #eecccc;
+}
+
 /* 
     Input
 */

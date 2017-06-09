@@ -115,9 +115,10 @@ var utilisateur = {
         methods: {
             majUtilisateur : function (utilisateur, e) {
                 e.preventDefault();
-                console.log("ici");
                 utilisateur.niveau += 1;
                 utilisateur.niveau %= 3;
+                console.log(utilisateur);
+                serverCall("server/majUtilisateur.php", {login : utilisateur.login, niveau : utilisateur.niveau});
             },
             loadTypes : function (data) {
                 var i;
@@ -179,27 +180,52 @@ var utilisateur = {
                     me.categories = $.map(data, function (cat) { return $.extend({valeurChoisie : '', estValide : true}, cat); });
                 });
             },
-            sauve : function () {
-                var infos = {}, i;
-                infos.num_tagType = this.type;
-                infos.categories = [];
+            valideForm : function () {
+                var i, categoriesValides = true;
+                
+                this.titreValide = (this.titre.length > 3);
+                this.typeValide = (this.type !== "");
+                
                 for (i = 0; i < this.categories.length; i += 1) {
-                    infos.categories[i] = {};
-                    infos.categories[i].num_categorie = this.categories[i].num_categorie;
-                    infos.categories[i].valeurChoisie = this.categories[i].valeurChoisie;
+                    this.categories[i].estValide = this.categories[i].valeurChoisie !== "";
+                    categoriesValides = categoriesValides && this.categories[i].estValide;
                 }
-                infos.titre = this.titre;
-                infos.tags = this.tags;
-                infos.isWiki = this.isWiki;
-                if (this.isWiki) {
-                    infos.inWiki = this.inWiki;
+                
+                if (!this.isWiki) {
+                    if (typeof this.inFichier.file !== "undefined") {
+                        this.fichierValide = this.inFichier.file !== "";
+                    } else {
+                        this.fichierValide = false;
+                    }
                 } else {
-                    infos.inFichier = this.inFichier;
+                    this.fichierValide = true;
                 }
                 
-                serverCall("server/ajout.php", infos);
-                
-                console.log(infos);
+                return this.titreValide && this.typeValide && categoriesValides && this.fichierValide;
+            },
+            sauve : function () {
+                if (this.valideForm()) {
+                    var infos = {}, i;
+                    infos.num_tagType = this.type;
+                    infos.categories = [];
+                    for (i = 0; i < this.categories.length; i += 1) {
+                        infos.categories[i] = {};
+                        infos.categories[i].num_categorie = this.categories[i].num_categorie;
+                        infos.categories[i].valeurChoisie = this.categories[i].valeurChoisie;
+                    }
+                    infos.titre = this.titre;
+                    infos.tags = this.tags;
+                    infos.isWiki = this.isWiki;
+                    if (this.isWiki) {
+                        infos.inWiki = this.inWiki;
+                    } else {
+                        infos.inFichier = this.inFichier;
+                    }
+
+                    serverCall("server/ajout.php", infos);
+
+                    console.log(infos);
+                }
                 //console.log(this.categories[0].valeurChoisie);
             }
         },
@@ -213,7 +239,10 @@ var utilisateur = {
                 type : '',
                 categories : [],
                 titre : '',
-                tags : ''
+                tags : '',
+                titreValide : true,
+                typeValide : true,
+                fichierValide : true
             };
         },
         mounted: function () {
@@ -221,8 +250,28 @@ var utilisateur = {
             serverCall("server/listeTags.php?num_categorie=0", function (data) { me.types = data; });
         }
     },
+    compDoc = {
+        template : '#page-doc-template',
+        data : function () {
+            return {
+                infos : {},
+                tags : [],
+                categories : []
+            };
+        },
+        mounted : function () {
+            console.log(this.$route.params.num_doc);
+            var me = this;
+            serverCall("server/infosDoc.php", { num_doc : this.$route.params.num_doc }, function (data) {
+                me.infos = data.infos;
+                me.categories = data.categories;
+                me.tags = data.tags;
+            });
+        }
+    },
     routes = [
         { path: '/login', component: compLogin },
+        { path: '/doc/:num_doc', component: compDoc },
         { path: '/recherche', component: compRecherche },
         { path: '/tags', component: compTags },
         { path: '/arborescence', component: compArborescence },
@@ -333,10 +382,10 @@ Vue.component('in-tag-categorie', {
     props : ['value', 'num_categorie'],
     mounted : function () {
         var me = this,
-            source = "http://ged/server/listeTags.php?num_categorie=" + me.num_categorie;
+            source = "http://ged/server/listeTags.php?tokenize2=true&num_categorie=" + me.num_categorie;
         
         $(this.$el).tokenize2({tokensAllowCustom: true, dataSource: source, searchFromStart : false, debounce : 200, tokensMaxItems : 1});
-        $(this.$el).on('tokenize:tokens:add', function (e, value) { me.$emit('input', value); });
+        $(this.$el).on('tokenize:tokens:add', function (e, value) { me.$emit('input', $(me.$el).next().find("li.token span").html()); });
     },
     watch : {
         value : function (value) {
@@ -347,7 +396,12 @@ Vue.component('in-tag-categorie', {
 
 Vue.component('in-fichier', {
     template : '<form action="http://ged/server/upload.php" method="post" enctype="multipart/form-data"><input type="file" name="files"></form>',
-    props : ['value'],
+    props : ['value', 'valide'],
+    watch : {
+        valide : function () {
+            $(this.$el).find(".fileuploader").toggleClass('has-error', !this.valide);
+        }
+    },
     mounted : function () {
         var me = this;
         
@@ -397,7 +451,7 @@ Vue.component('in-fichier', {
                         item.html.find('.progress-bar2').fadeOut(400);
                     }, 400);
                     
-                    me.$emit('input', { file : data[0].old_name, fileName : data[0].old_name });
+                    me.$emit('input', { file : data[0].old_name, fileName : data[0].name });
                     
                     //console.log(data[0].name + " " + data[0].old_name);
                 },
@@ -493,6 +547,12 @@ $(function () {
                     utilisateur.loggedIn = false;
                     router.push("/login");
                     console.log("ici");
+                },
+                formatDate : function (date) {
+                    var infos1 = date.split(" "),
+                        infos2 = infos1[0].split("-"),
+                        infos3 = infos1[1].split(":");
+                    return infos2[2] + "/" + infos2[1] + "/" + infos2[0] + " à " + infos3[0] + "h" + infos3[1];
                 }
             }
         });

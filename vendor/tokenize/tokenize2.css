@@ -48,8 +48,8 @@
 
 .tokenize.single > .tokens-container > .token {
     display: block;
-    border-color: #fff;
-    background-color: transparent;
+    /*border-color: #fff;
+    background-color: transparent;*/
 }
 
 .tokenize.sortable > .tokens-container > .token.shadow {

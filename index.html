@@ -121,23 +121,39 @@
                 <li class="active">Ciril</li>
             </ol>
         </script>
+        <script type="text/x-template" id="page-doc-template">
+            <div id="affichageDoc">
+                <b>{{ infos.type }}</b>
+                <span v-for="categorie in categories">
+                     - 
+                    <em class="texteGris">{{ categorie.nom }} : </em>
+                    {{ categorie.mot }}
+                </span>
+                <em class="texteGris">Tags : </em>
+                <span v-for="tag in tags">{{tag}}, </span>
+            
+                <h1>{{ infos.titre }}</h1>
+                {{ infos.auteur }} le {{ $root.formatDate(infos.date) }}
+                <!-- Doc {{ $route.params.num_doc }} -->
+            </div>
+        </script>
         <script type="text/x-template" id="page-ajout-template">
             <div>
                 <form>
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-3" v-bind:class="{ 'has-error': !typeValide }">
                             <label>Type</label>
                             <select class="form-control" v-model="type" @change="chargeCategories">
                                 <option value="">Choisir un type</option>
                                 <option v-for="leType in types" :value="leType.num_tag">{{ leType.mot }}</option>
                             </select>
                         </div>
-                        <div v-for="categorie in categories" class="form-group col-md-3">
+                        <div v-for="categorie in categories" class="form-group col-md-3" v-bind:class="{ 'has-error': !categorie.estValide }">
                             <label>{{ categorie.nom }}</label>
                             <in-tag-categorie :num_categorie="categorie.num_categorie" v-model="categorie.valeurChoisie"></<in-tag-categorie>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-bind:class="{ 'has-error': !titreValide }" >
                         <label>Titre</label>
                         <input type="text" class="form-control" placeholder="Titre..." v-model="titre" >
                     </div>
@@ -151,7 +167,7 @@
                     </div>
                     <div v-show="!isWiki">
                         <div>
-                            <in-fichier v-model="inFichier"></in-fichier>
+                            <in-fichier v-model="inFichier" :valide="fichierValide"></in-fichier>
                         </div>
                     </div>
                     <div v-show="isWiki">
