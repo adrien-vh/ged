@@ -117,7 +117,7 @@
         e.preventDefault()
         utilisateur.niveau += 1
         utilisateur.niveau %= 3
-        U.serverCall('server/majUtilisateur.php', {login: utilisateur.login, niveau: utilisateur.niveau})
+        U.serverCall('server/majUtilisateur/' + utilisateur.login + '/' + utilisateur.niveau)
       },
       loadTypes: function (data) {
         var i
@@ -131,38 +131,38 @@
       },
       submitCategorie: function () {
         var me = this
-        U.serverCall('server/ajoutCategorie.php', { nom: this.nouvelleCategorie }, function () {
+        U.serverCall('server/ajoutCategorie/' + this.nouvelleCategorie, function () {
           me.nouvelleCategorie = ''
-          U.serverCall('server/listeCategories.php', function (data) { me.categories = data })
+          U.serverCall('server/categories', function (data) { me.categories = data.categories })
         })
       },
       submitType: function () {
         var me = this
-        U.serverCall('server/ajoutType.php', { nom: this.nouveauType }, function () {
+        U.serverCall('server/ajoutType/' + this.nouveauType, function () {
           me.nouveauType = ''
-          U.serverCall('server/listeTypes.php', function (data) { me.loadTypes(data) })
+          U.serverCall('server/types', function (data) { me.loadTypes(data.types) })
         })
       },
       submitCategorieType: function (type, e) {
         e.preventDefault()
         var me = this
-        U.serverCall('server/ajoutCategorieType.php', {num_tagType: type.num_tag, num_categorie: type.nouvelleCategorie}, function () {
-          U.serverCall('server/listeTypes.php', function (data) { me.loadTypes(data) })
+        U.serverCall('server/ajoutCategorieType/' + type.num_tag + '/' + type.nouvelleCategorie, function () {
+          U.serverCall('server/types', function (data) { me.loadTypes(data.types) })
         })
       },
       submitUtilisateur: function () {
         var me = this
-        U.serverCall('server/ajoutUtilisateur.php', {num_utilisateur: this.nouvelUtilisateur}, function () {
-          U.serverCall('server/listeUtilisateursActifs.php', function (data) { me.utilisateurs = data })
+        U.serverCall('server/ajoutUtilisateur/' + this.nouvelUtilisateur, function () {
+          U.serverCall('server/utilisateursActifs', function (data) { me.utilisateurs = data.utilisateurs })
           me.nouvelUtilisateur = ''
         })
       }
     },
     mounted: function () {
       var me = this
-      U.serverCall('server/listeCategories.php', function (data) { me.categories = data })
-      U.serverCall('server/listeTypes.php', function (data) { me.loadTypes(data) })
-      U.serverCall('server/listeUtilisateursActifs.php', function (data) { me.utilisateurs = data })
+      U.serverCall('server/categories', function (data) { me.categories = data.categories })
+      U.serverCall('server/types', function (data) { me.loadTypes(data.types) })
+      U.serverCall('server/utilisateursActifs', function (data) { me.utilisateurs = data.utilisateurs })
     }
   }
 </script>

@@ -15,7 +15,7 @@
           <ul class="nav navbar-nav">
             <router-link tag="li" to="/recherche"><a>Recherche</a></router-link>
             <router-link tag="li" to="/tags"><a>Tags</a></router-link>
-            <router-link tag="li" to="/arborescence"><a>Arborescence</a></router-link>
+            <!-- <router-link tag="li" to="/arborescence"><a>Arborescence</a></router-link> -->
             <router-link tag="li" to="/ajout"><a>Ajout</a></router-link>
             <router-link tag="li" to="/configuration"><a>Configuration</a></router-link>
           </ul>
@@ -27,7 +27,7 @@
       </div>
     </nav>
     <div class="container-fluid">
-      <div class="row" v-bind:class="{ 'col-md-6': utilisateur.loggedIn }">
+      <div class="row" v-bind:class="{ 'col-md-6': utilisateur.loggedIn && $router.currentRoute.path.substr(0,4) != '/doc' }">
         <div class="contenu">
           <router-view></router-view>
         </div>
@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     onDisconnect: function () {
-      U.serverCall('server/disconnect.php')
+      U.serverCall('server/disconnect')
       C.utilisateur.loggedIn = false
       this.$router.push('/login')
     }

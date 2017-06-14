@@ -18,7 +18,7 @@ require('./commun.js')
 
 Vue.config.productionTip = false
 
-U.serverCall('server/isConnected.php', function (data) {
+U.serverCall('server/isConnected', function (data) {
   if (data.connecte) {
     C.utilisateur.informationsRecuperees = true
     C.utilisateur.loggedIn = true

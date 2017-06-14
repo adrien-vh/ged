@@ -41,7 +41,7 @@ export default {
       if (!me.loginEnCours) {
         me.loginEnCours = true
         U.serverCall(
-          'server/auth.php',
+          'server/auth',
           { login: me.login, password: me.password },
           function (data) {
             if (data.loginValide) {

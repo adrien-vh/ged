@@ -1,5 +1,5 @@
 <template>
-  <form action="http://ged/server/upload.php" method="post" enctype="multipart/form-data">
+  <form action="http://ged/server/upload" method="post" enctype="multipart/form-data">
     <input type="file" name="files">
   </form>
 </template>
@@ -31,7 +31,7 @@
           onItemRemove: function (itemEl, listEl, parentEl, newInputEl, inputEl) { itemEl.remove() }
         },
         upload: {
-          url: 'http://ged/server/upload.php',
+          url: 'http://ged/server/upload',
           data: null,
           type: 'POST',
           enctype: 'multipart/form-data',
@@ -39,7 +39,7 @@
           synchron: true,
           beforeSend: null,
           onSuccess: function (result, item) {
-            var data = JSON.parse(result)
+            var data = result
 
             if (data.isSuccess && data.files[0]) {
               item.name = data.files[0].name

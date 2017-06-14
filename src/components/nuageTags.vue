@@ -9,15 +9,36 @@ require('../vendor/jqcloud/jqcloud.min.js')
 export default {
   props: ['tags'],
   watch: {
-    tags: function () { }
+    tags: function () {
+     // $(this.$el).jQCloud($.extend({}, this.tags))
+      console.log(this.tags)
+      this.setTags(this.tags)
+    }
   },
-  mounted: function () {
-    $(this.$el).jQCloud(this.tags)
+  methods: {
+    setTags: function (tags) {
+      var tagsNuage = []
+      var me = this
+
+      for (var i = 0; i < tags.length; i++) {
+        tagsNuage.push(tags[i])
+      }
+      $(this.$el).html('')
+      $(this.$el).jQCloud(tagsNuage, {
+        afterCloudRender: function () {
+          console.log(this)
+          $(this).find('span span').click(function (e) {
+            me.$emit('tagclick', $(this).attr('data-numtag'))
+          })
+        }
+      })
+    }
   }
 }
 </script>
 
 <style lang="scss">
+  @import "../styles/copic";
   $jqcloud-font: 10px "Helvetica", "Arial", sans-serif;
 
   $jqcloud-link-hover-color: #00ccff;
@@ -27,8 +48,12 @@ export default {
     line-height: normal;
     overflow: hidden;
     position: relative;
+    
+    span {
+      cursor: pointer;
+    }
 
-    .w1 { color: #aab5f0; font-size: 100%;  }
+    .w1 { color: $CB02; font-size: 100%;  }
     .w2 { color: #99ccee; font-size: 150%;  }
     .w3 { color: #a0ddff; font-size: 200%;  }
     .w4 { color: #90c5f0; font-size: 250%;  }
@@ -36,8 +61,8 @@ export default {
     .w6 { color: #90c5f0; font-size: 350%;  }
     .w7 { color: #3399dd; font-size: 400%;  }
     .w8 { color: #00ccff; font-size: 450%;  }
-    .w9 { color: #00ccff; font-size: 500%;  }
-    .w10 { color: #00ccff; font-size: 550%;  }
+    .w9 { color: $CB16; font-size: 500%;  }
+    .w10 { color: $CB18; font-size: 550%;  }
   }
 
   .jqcloud-word {

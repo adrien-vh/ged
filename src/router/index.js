@@ -14,11 +14,13 @@ var router = new Router({
   routes: [
     { path: '/login', name: 'Login', component: Login },
     { path: '/recherche', component: Recherche },
+    { path: '/recherche/:requeteUrl', component: Recherche, props: true },
     { path: '/tags', component: Tags },
+    { path: '/tags/:numTags', component: Tags, props: true },
     { path: '/arborescence', component: Arborescence },
     { path: '/ajout', component: Ajout },
     { path: '/configuration', component: Config },
-    { path: '/doc/:num_doc', component: Doc },
+    { path: '/doc/:num_doc', component: Doc, props: true },
     { path: '*', redirect: '/recherche' }
   ],
   linkActiveClass: 'active'
