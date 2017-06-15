@@ -13,7 +13,7 @@
       </div>
       <div v-show="isWiki">
         <div>
-          <ckeditor v-model="inWiki"></ckeditor>
+          <inCk ref="inWiki"></inCk>
         </div>
       </div>
       <button type="button" class="btn btn-primary btn-lg center-block mt-5" v-on:click="sauve"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
@@ -27,10 +27,10 @@ import inTags from '@/components/inTags'
 import inFichier from '@/components/inFichier'
 import inTagCategorie from '@/components/inTagCategorie'
 import inMetaDoc from '@/components/inMetaDoc'
-import Ckeditor from 'vue-ckeditor2'
+import inCk from '@/components/inCk'
 
 export default {
-  components: { inTags, inFichier, Ckeditor, inTagCategorie, inMetaDoc },
+  components: { inTags, inFichier, inCk, inTagCategorie, inMetaDoc },
   methods: {
     valideForm: function () {
       if (!this.isWiki) {
@@ -46,12 +46,13 @@ export default {
       return this.$refs.formMeta.valide() && this.fichierValide
     },
     sauve: function () {
+      var me = this
       if (this.valideForm()) {
         var infos = {}
         var i
         infos.num_tagType = this.metas.type
         infos.categories = []
-        for (i = 0; i < this.categories.length; i += 1) {
+        for (i = 0; i < this.metas.categories.length; i += 1) {
           infos.categories[i] = {}
           infos.categories[i].num_categorie = this.metas.categories[i].num_categorie
           infos.categories[i].valeurChoisie = this.metas.categories[i].valeurChoisie
@@ -60,12 +61,14 @@ export default {
         infos.tags = this.metas.tags
         infos.isWiki = this.isWiki
         if (this.isWiki) {
-          infos.inWiki = this.inWiki
+          infos.inWiki = this.$refs.inWiki.getContent()
         } else {
           infos.inFichier = this.inFichier
         }
 
-        U.serverCall('server/ajout', infos)
+        U.serverCall('server/ajout', infos, function (data) {
+          me.$router.push('/doc/' + data.num_doc)
+        })
       }
     }
   },

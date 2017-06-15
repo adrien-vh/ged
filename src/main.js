@@ -24,6 +24,7 @@ U.serverCall('server/isConnected', function (data) {
     C.utilisateur.loggedIn = true
     C.utilisateur.nom = data.nom
     C.utilisateur.num_utilisateur = data.num_utilisateur
+    C.utilisateur.niveau = data.niveau
   }
   /* eslint-disable no-new */
   new Vue({
@@ -31,6 +32,9 @@ U.serverCall('server/isConnected', function (data) {
     router,
     template: '<App/>',
     components: { App },
+    data: {
+      utilisateur: C.utilisateur
+    },
     methods: {
       formatDate: function (date) {
         if (typeof date === 'undefined') {

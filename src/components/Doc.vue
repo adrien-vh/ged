@@ -14,37 +14,57 @@
           {{ categorie.mot }}
         </span>
         <em class="texteGris">Tags : </em>
-        <span v-for="tag in tags">{{tag}}, </span>
+        <span v-for="tag in tags">{{tag}}, </span><br>
 
-        <h1>{{ infos.titre }}</h1>
+        <span class="extension" :class="extension">{{ extension }}</span><span class="titre">{{ infos.titre }}</span>
         <div class="mb-2">{{ infos.auteur }} le {{ $root.formatDate(infos.date) }}</div>
-        <button type="button" class="btn btn-link" v-on:click="editerMetas">
-          <i class="fa fa-pencil" aria-hidden="true"></i> Modifier les métadonnées
+        <button type="button" class="btn btn-link" v-on:click="download" v-if="infos.isWiki == '0'">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i> Télécharger
         </button>
-        <button type="button" class="btn btn-link" v-on:click="editerWebdav" v-if="infos.isWiki == '0'">
-          <i class="fa fa-pencil" aria-hidden="true"></i> Modifier le fichier original
-        </button>
+        <span v-if="$root.utilisateur.niveau > 0">
+          <button type="button" class="btn btn-link" v-on:click="editerMetas">
+            <i class="fa fa-pencil" aria-hidden="true"></i> Modifier les métadonnées
+          </button>
+          <button type="button" class="btn btn-link" v-on:click="editerWebdav" v-if="infos.isWiki == '0' && editable" v-show="!editionEnCours">
+            <i class="fa fa-pencil" aria-hidden="true"></i> Modifier le fichier original
+          </button>
+          <button type="button" class="btn btn-link" v-on:click="validerWebdav" v-if="infos.isWiki == '0' && editable" v-show="editionEnCours">
+            <i class="fa fa-check" aria-hidden="true"></i> Valider les modifications
+          </button>
+          <button type="button" class="btn btn-link texteRouge" v-on:click="confirmeSuppression = true" v-show="!confirmeSuppression">
+            <i class="fa fa-times" aria-hidden="true"></i> Supprimer le document
+          </button>
+          <button type="button" class="btn btn-link texteRouge" v-on:click="supprimeDoc" v-show="confirmeSuppression">
+            <i class="fa fa-times" aria-hidden="true"></i> Confirmer la suppression ?
+          </button>
+        </span>
       </div>
       <!-- Doc {{ $route.params.num_doc }} -->
     </div>
-    <div class="col-md-12 mt-5" v-if="infos.isWiki == '1'">
+    <div class="col-md-12 mt-5" v-show="infos.isWiki == '1'" v-if="$root.utilisateur.niveau > 0">
       <div class="in-ck mb-5">
-        <ckeditor v-model="infos.contenu" types="inline"></ckeditor>
+        <inCk inline="true" ref="inWiki"></inCk>
       </div>
       <button type="button" class="btn btn-primary btn-sm" @click="majContenu"><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Enregistrer</button>
     </div>
-    <div class="col-md-6 mt-5" v-if="infos.isWiki == '0'">
+    <div class="col-md-12 mt-5 contenu" v-html="infos.contenu" v-if="$root.utilisateur.niveau == 0 && infos.isWiki == '1'">
+    </div>
+    <div class="col-md-6 mt-5 texteCentre" v-if="pdfEnGeneration">
+      Génération du pdf en cours...<br><br>
+      <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>      
+    </div>
+    <div class="col-md-6 mt-5" v-if="infos.isWiki == '0' && pdfDispo">
       <iframe :src="urlPdf" style="width: 100%;height: 800px;border: 1px solid #000;" id="pdfView"></iframe>
     </div>
   </div>
 </template>
 
 <script>
-  import Ckeditor from 'vue-ckeditor2'
+  import inCk from '@/components/inCk'
   import inMetaDoc from '@/components/inMetaDoc'
   
   export default {
-    components: { Ckeditor, inMetaDoc },
+    components: { inCk, inMetaDoc },
     props: ['num_doc'],
     watch: {
       num_doc: function () {
@@ -58,6 +78,7 @@
         tags: [],
         categories: [],
         urlPdf: '',
+        extension: '',
         metas: {
           typeValide: true,
           categories: [],
@@ -65,7 +86,12 @@
           titre: '',
           tags: [],
           type: ''
-        }
+        },
+        pdfDispo: false,
+        editable: false,
+        editionEnCours: false,
+        pdfEnGeneration: false,
+        confirmeSuppression: false
       }
     },
     methods: {
@@ -90,11 +116,34 @@
           me.infos = data.infos
           me.categories = data.categories
           me.tags = data.tags
+          me.extension = data.extension !== 'html' ? data.extension : 'wiki'
+          me.pdfDispo = data.pdfDispo
+          me.editable = data.editable
+          me.pdfEnGeneration = data.pdfEnGeneration
+  
+          console.log(me.$refs)
+  
+          if (me.infos.isWiki === '1') {
+            me.$refs.inWiki.setContent(me.infos.contenu)
+          }
+  
+          if (me.pdfEnGeneration) {
+            setInterval(function () {
+              U.serverCall('server/pdfDispo/' + me.num_doc, function (data) {
+                if (data.pdfDispo) {
+                  setTimeout(function () {
+                    me.pdfEnGeneration = false
+                    me.pdfDispo = true
+                  }, 5000)
+                }
+              })
+            }, 1000)
+          }
         })
       },
       majContenu: function () {
         var me = this
-        U.serverCall('server/majContenu/' + this.num_doc, { contenu: this.infos.contenu }, function () {
+        U.serverCall('server/majContenu/' + this.num_doc, { contenu: me.$refs.inWiki.getContent() }, function () {
           me.charge()
         })
       },
@@ -119,9 +168,26 @@
         }
       },
       editerWebdav: function () {
+        this.editionEnCours = true
         U.serverCall('server/lienWebdav/' + this.num_doc, function (data) {
          // me.charge()
           window.open(data.url, '_self')
+        })
+      },
+      validerWebdav: function () {
+        var me = this
+        this.editionEnCours = false
+        U.serverCall('server/validerWebdav/' + this.num_doc, function (data) {
+          me.charge()
+        })
+      },
+      download: function () {
+        window.open('http://ged/server/doc.php?num_doc=' + this.num_doc)
+      },
+      supprimeDoc: function () {
+        var me = this
+        U.serverCall('server/supprimeDoc/' + this.num_doc, function () {
+          me.$router.push('/recherche')
         })
       }
     },
@@ -132,10 +198,32 @@
 </script>
 
 <style scoped lang="scss">
-  .metas {
-   
+  @import "../styles/copic";
+  .extension, .titre {
+    display: inline-block;
   }
-  .in-ck {
+  
+  .titre, .extension {
+    height: 40px;
+    margin-bottom: 15px;
+  }
+  
+  .titre {
+    margin-left: 15px;
+    font-size: 28px;
+    line-height: 25px;
+    padding-top: 5px;
+  }
+  
+  .extension {
+    width: 40px;
+    padding-top: 10px;
+    text-align: center;
+    &.wiki { background-color: $CW1; color: $CW9; }
+    &.pdf { background-color: $CR17; color: $CW00; }
+    &.docx { background-color: $CB18; color: $CW00; }
+  }
+  .in-ck, .contenu {
     /* border-top: 1px solid #555;*/
     background-color: #fff;
   }

@@ -16,8 +16,8 @@
             <router-link tag="li" to="/recherche"><a>Recherche</a></router-link>
             <router-link tag="li" to="/tags"><a>Tags</a></router-link>
             <!-- <router-link tag="li" to="/arborescence"><a>Arborescence</a></router-link> -->
-            <router-link tag="li" to="/ajout"><a>Ajout</a></router-link>
-            <router-link tag="li" to="/configuration"><a>Configuration</a></router-link>
+            <router-link tag="li" to="/ajout" v-show="utilisateur.niveau >= 1"><a>Ajout</a></router-link>
+            <router-link tag="li" to="/configuration" v-show="utilisateur.niveau == 2"><a>Configuration</a></router-link>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a>{{ utilisateur.nom }}</a></li>

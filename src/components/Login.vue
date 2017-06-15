@@ -17,7 +17,8 @@
           class="btn btn-lg btn-primary btn-block" type="submit" 
           v-on:click="onSubmit" 
           v-bind:class="{ 'disabled': loginEnCours }">
-          S'identifier
+          <i class="fa fa-spinner fa-pulse fa-fw" v-show="loginEnCours"></i>
+          <span v-show="!loginEnCours">S'identifier</span>
         </button>
       </form>
     </div>
@@ -48,6 +49,7 @@ export default {
               C.utilisateur.loggedIn = true
               C.utilisateur.nom = data.nom
               C.utilisateur.num_utilisateur = data.num_utilisateur
+              C.utilisateur.niveau = parseInt(data.niveau, 10)
               me.$router.push('/')
             } else {
               me.loginValide = false

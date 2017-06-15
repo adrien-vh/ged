@@ -2,3 +2,4 @@
 config.rb
 server
 node_modules
+dist

@@ -11,6 +11,7 @@
           <tr>
             <th>Utilisateur</th>
             <th style="width: 150px;">Droit</th>
+            <th style="width: 150px;"></th>
           </tr>
         </thead>
         <tbody>
@@ -31,6 +32,11 @@
               v-if="utilisateur.niveau == 2"
               v-on:click="majUtilisateur(utilisateur, $event)">
                 Admin
+              </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-link texteRouge" v-on:click="supprimeUtilisateur(utilisateur)">
+                <i class="fa fa-times" aria-hidden="true"></i> Supprimer
               </button>
             </td>
           </tr>
@@ -118,6 +124,12 @@
         utilisateur.niveau += 1
         utilisateur.niveau %= 3
         U.serverCall('server/majUtilisateur/' + utilisateur.login + '/' + utilisateur.niveau)
+      },
+      supprimeUtilisateur: function (utilisateur) {
+        var me = this
+        U.serverCall('server/supprimeUtilisateur/' + utilisateur.login, function () {
+          U.serverCall('server/utilisateursActifs', function (data) { me.utilisateurs = data.utilisateurs })
+        })
       },
       loadTypes: function (data) {
         var i

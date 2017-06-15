@@ -29,6 +29,7 @@ module.exports = {
     'C': true,
     'U': true,
     'Bloodhound': false,
-    'tinymce': false
+    'tinymce': false,
+    'CKEDITOR': false
   }
 }

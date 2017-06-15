@@ -29,6 +29,19 @@ body {
 .texteGris {
     color: $CN4;
 }
+.texteRouge {
+    color: $CR17;   
+}
+
+button.texteRouge {
+  &:hover {
+    color: $CR89;
+  }
+}
+
+.texteCentre {
+  text-align: center;
+}
 
 #gedInstance {
     min-height: 100%;

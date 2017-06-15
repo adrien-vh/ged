@@ -10,8 +10,6 @@ export default {
   props: ['tags'],
   watch: {
     tags: function () {
-     // $(this.$el).jQCloud($.extend({}, this.tags))
-      console.log(this.tags)
       this.setTags(this.tags)
     }
   },
@@ -26,7 +24,6 @@ export default {
       $(this.$el).html('')
       $(this.$el).jQCloud(tagsNuage, {
         afterCloudRender: function () {
-          console.log(this)
           $(this).find('span span').click(function (e) {
             me.$emit('tagclick', $(this).attr('data-numtag'))
           })

@@ -4,7 +4,8 @@ C = {
     informationsRecuperees: false,
     loggedIn: false,
     num_utilisateur: 0,
-    nom: ''
+    nom: '',
+    niveau: -1
   }
 }
 

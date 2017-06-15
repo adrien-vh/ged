@@ -48,7 +48,6 @@
         })
       },
       valide: function () {
-        console.log('alide')
         var categoriesValides = true
 
         this.value.titreValide = (this.value.titre.length > 3)
