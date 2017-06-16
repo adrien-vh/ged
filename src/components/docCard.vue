@@ -1,7 +1,7 @@
 <template>
   <a class="doc" :href="'#/doc/' + doc.num_doc">
     <div class="ext" :class="ext(doc.chemin)">{{ ext(doc.chemin) }}</div>
-    <div class="sur-titre"><b>{{ doc.type }}</b> - {{ doc.tags }}</div>
+    <div class="sur-titre"><b>{{ doc.type }}</b><span v-show="doc.tags"> - {{ doc.tags }}</span></div>
     <div class="titre">{{ doc.titre }}</div>
     <div class="sous-titre">par <b>{{ doc.auteur }}</b> le {{ $root.formatDate(doc.date) }}</div>
     <div v-if="doc.contenu" v-html="doc.contenu" class="contenu-doc"></div>
@@ -51,6 +51,7 @@
       &.wiki { background-color: $CW1; color: $CW9; }
       &.pdf { background-color: $CR17; color: $CW00; }
       &.docx { background-color: $CB18; color: $CW00; }
+      &.xlsx { background-color: $CG14; color: $CW00; }
     }
     
     .titre {

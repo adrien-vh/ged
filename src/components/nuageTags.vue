@@ -50,16 +50,16 @@ export default {
       cursor: pointer;
     }
 
-    .w1 { color: $CB02; font-size: 100%;  }
-    .w2 { color: #99ccee; font-size: 150%;  }
-    .w3 { color: #a0ddff; font-size: 200%;  }
-    .w4 { color: #90c5f0; font-size: 250%;  }
-    .w5 { color: #90a0dd; font-size: 300%;  }
-    .w6 { color: #90c5f0; font-size: 350%;  }
-    .w7 { color: #3399dd; font-size: 400%;  }
-    .w8 { color: #00ccff; font-size: 450%;  }
-    .w9 { color: $CB16; font-size: 500%;  }
-    .w10 { color: $CB18; font-size: 550%;  }
+    .w1 { color: $CB02; font-size: 100%;  .cat-0 { color:$CRV13;  }}
+    .w2 { color: $CB02; font-size: 150%;  .cat-0 { color:$CRV13;  }}
+    .w3 { color: $CB04; font-size: 200%;  .cat-0 { color:$CRV13;  }}
+    .w4 { color: $CB04; font-size: 250%;  .cat-0 { color:$CRV13;  }}
+    .w5 { color: $CB14; font-size: 300%;  .cat-0 { color:$CRV14;  }}
+    .w6 { color: $CB14; font-size: 350%;  .cat-0 { color:$CRV14;  }}
+    .w7 { color: $CB16; font-size: 400%;  .cat-0 { color:$CR14;  }}
+    .w8 { color: $CB16; font-size: 450%;  .cat-0 { color:$CR14;  }}
+    .w9 { color: $CB18; font-size: 500%;  .cat-0 { color:$CR17;  }}
+    .w10 { color: $CB18; font-size: 550%; .cat-0 { color:$CR17;  } }
   }
 
   .jqcloud-word {

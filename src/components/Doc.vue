@@ -1,24 +1,41 @@
 <template>
   <div id="affichageDoc" class="row">
-    <div class="col-md-6">
-      <div v-show="editionMetas">
-        <inMetaDoc v-model="metas" ref="formMeta"></inMetaDoc>
-        <button type="button" class="btn btn-primary btn-sm" @click="majMetas"><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Enregistrer</button>
-        <button type="button" class="btn btn-default btn-sm" v-on:click="editionMetas = false"><i class="fa fa-times fa-lg" aria-hidden="true"></i> Annuler</button>
-      </div>
-      <div v-show="!editionMetas" class="pb-5 metas">
-        <b>{{ infos.type }}</b>
-        <span v-for="categorie in categories">
-          - 
-          <em class="texteGris">{{ categorie.nom }} : </em>
-          {{ categorie.mot }}
-        </span>
-        <em class="texteGris">Tags : </em>
-        <span v-for="tag in tags">{{tag}}, </span><br>
+    <div class="col-md-6" v-show="editionMetas">
+      <inMetaDoc v-model="metas" ref="formMeta"></inMetaDoc>
+      <button type="button" class="btn btn-primary btn-sm" @click="majMetas"><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Enregistrer</button>
+      <button type="button" class="btn btn-default btn-sm" v-on:click="editionMetas = false"><i class="fa fa-times fa-lg" aria-hidden="true"></i> Annuler</button>
+    </div>
+    <div class="col-md-6" v-show="!editionMetas">
+      <div class="pb-5 metas">
+        
 
-        <span class="extension" :class="extension">{{ extension }}</span><span class="titre">{{ infos.titre }}</span>
-        <div class="mb-2">{{ infos.auteur }} le {{ $root.formatDate(infos.date) }}</div>
-        <button type="button" class="btn btn-link" v-on:click="download" v-if="infos.isWiki == '0'">
+        <div class="doc-metas">
+          <span class="extension" :class="extension">{{ extension }}</span>
+          <span class="titre">{{ infos.titre }}</span>
+          <div class="infos-auteur">Modifié par {{ infos.auteur }} le {{ $root.formatDate(infos.date) }}</div>
+        </div>
+        
+      </div>
+      <!-- Doc {{ $route.params.num_doc }} -->
+    </div>
+    <div class="col-md-3" v-show="!editionMetas">
+      <table class="table table-condensed table-infos">
+        <tr>
+          <td>Type :</td>
+          <td>{{ infos.type }}</td>
+        </tr>
+        <tr v-for="categorie in categories">
+          <td >{{ categorie.nom }} :</td>
+          <td>{{ categorie.mot }}</td>
+        </tr>
+        <tr v-show="tags.length > 0">
+          <td>Tags :</td>
+          <td>{{ tags.join(', ') }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-12 texteCentre" v-show="!editionMetas">
+      <button type="button" class="btn btn-link" v-on:click="download" v-if="infos.isWiki == '0'">
           <i class="fa fa-floppy-o" aria-hidden="true"></i> Télécharger
         </button>
         <span v-if="$root.utilisateur.niveau > 0">
@@ -38,8 +55,6 @@
             <i class="fa fa-times" aria-hidden="true"></i> Confirmer la suppression ?
           </button>
         </span>
-      </div>
-      <!-- Doc {{ $route.params.num_doc }} -->
     </div>
     <div class="col-md-12 mt-5" v-show="infos.isWiki == '1'" v-if="$root.utilisateur.niveau > 0">
       <div class="in-ck mb-5">
@@ -49,11 +64,11 @@
     </div>
     <div class="col-md-12 mt-5 contenu" v-html="infos.contenu" v-if="$root.utilisateur.niveau == 0 && infos.isWiki == '1'">
     </div>
-    <div class="col-md-6 mt-5 texteCentre" v-if="pdfEnGeneration">
+    <div class="col-md-12 mt-5 texteCentre" v-if="pdfEnGeneration">
       Génération du pdf en cours...<br><br>
       <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>      
     </div>
-    <div class="col-md-6 mt-5" v-if="infos.isWiki == '0' && pdfDispo">
+    <div class="col-md-12 mt-5" v-if="infos.isWiki == '0' && pdfDispo">
       <iframe :src="urlPdf" style="width: 100%;height: 800px;border: 1px solid #000;" id="pdfView"></iframe>
     </div>
   </div>
@@ -199,30 +214,53 @@
 
 <style scoped lang="scss">
   @import "../styles/copic";
-  .extension, .titre {
-    display: inline-block;
+  
+  .table-infos {
+    tr td:first-child {
+      text-align: right;
+      padding-right: 15px;
+      width: 150px;
+      font-style: italic;
+    }
+    tr td:last-child {
+      
+    }
   }
   
-  .titre, .extension {
-    height: 40px;
-    margin-bottom: 15px;
+  .doc-metas {
+    position: relative;
+    padding-left: 60px;
+    
+    .extension {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      font-size: 18px;
+      padding-top: 9px;
+      &.wiki { background-color: $CW1; color: $CW9; }
+      &.pdf { background-color: $CR17; color: $CW00; }
+      &.docx { background-color: $CB18; color: $CW00; }
+      &.xlsx { background-color: $CG14; color: $CW00; }
+    }
+    
+    .infos-auteur {
+      margin-left: 2px;
+    }
+    
+    .titre {
+      display: block;
+      font-size: 28px;
+      line-height: 25px;
+      margin-bottom: 8px;
+    }
+    
   }
   
-  .titre {
-    margin-left: 15px;
-    font-size: 28px;
-    line-height: 25px;
-    padding-top: 5px;
-  }
   
-  .extension {
-    width: 40px;
-    padding-top: 10px;
-    text-align: center;
-    &.wiki { background-color: $CW1; color: $CW9; }
-    &.pdf { background-color: $CR17; color: $CW00; }
-    &.docx { background-color: $CB18; color: $CW00; }
-  }
   .in-ck, .contenu {
     /* border-top: 1px solid #555;*/
     background-color: #fff;
