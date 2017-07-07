@@ -4,13 +4,40 @@
       <inMetaDoc v-model="metas" ref="formMeta"></inMetaDoc>
       <form>
         <div class="btn-group mb-5" role="group">
-          <button type="button" class="btn btn-default" v-bind:class="{ 'active': !isWiki }" v-on:click="isWiki = false">Fichier</button>
+          <button 
+                  type="button" 
+                  class="btn btn-default" 
+                  v-bind:class="{ 'active': !isWiki && !isFromMail }" 
+                  v-on:click="isWiki = false; isFromMail = false">
+            Fichier
+          </button>
+          <button 
+                  type="button" 
+                  class="btn btn-default" 
+                  v-bind:class="{ 'active': !isWiki && isFromMail }" 
+                  v-on:click="isWiki = false; isFromMail = true">
+            Fichier envoyé par mail
+          </button>
           <button type="button" class="btn btn-default" v-bind:class="{ 'active': isWiki }" v-on:click="isWiki = true">Wiki</button>
         </div>
-        <div v-show="!isWiki">
+        <div v-show="!isWiki && !isFromMail">
           <div>
-            <inFichier v-model="inFichier" :valide="fichierValide" @input="chargePdf"></inFichier>
+            <inFichier v-model="inFichier" :valide="fichierValide" @input="chargePdf(inFichier.fileName)"></inFichier>
           </div>
+        </div>
+        <div v-show="!isWiki && isFromMail">
+          <table class="table table-hover">
+            <tbody>
+              <tr v-for="fichierMail in fichiersMails">
+                <td>
+                  <span class="mr-2">
+                    <a href="#" @click.prevent="supprimeFichierMail(fichierMail)"><i class="fa fa-trash-o fa-lg texteRouge" aria-hidden="true"></i></a>
+                  </span>
+                  <a href="#" @click.prevent="chargeFichierMail(fichierMail)">{{ fichierMail.nomFichier }}</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div v-show="isWiki">
           <div>
@@ -43,22 +70,36 @@ import inCk from '@/components/inCk'
 export default {
   components: { inTags, inFichier, inCk, inTagCategorie, inMetaDoc },
   methods: {
-    chargePdf: function () {
-      console.log(this.inFichier.fileName)
+    chargeFichiersMails: function () {
       var me = this
-      if (this.inFichier.fileName.trim() === '') {
+      U.serverCall('server/fichiersMails', function (data) {
+        me.fichiersMails = data.fichiersMails
+      })
+    },
+    supprimeFichierMail: function (fichier) {
+      var me = this
+      U.serverCall('server/supprimeFichierMail/' + fichier.nomFichier, function () { me.chargeFichiersMails() })
+    },
+    chargeFichierMail: function (fichier) {
+      this.fichierMailChoisi = fichier.nomFichier
+      this.chargePdf(fichier.nomFichier)
+    },
+    chargePdf: function (fichier) {
+      console.log(fichier)
+      var me = this
+      if (fichier.trim() === '') {
         this.urlPdf = ''
         this.pdfValide = false
         if (this.intervalCheckPdf) {
           clearInterval(this.intervalCheckPdf)
         }
       } else {
-        U.serverCall('server/pdfuf', {fichier: this.inFichier.fileName}, function (data) {
+        U.serverCall('server/pdfuf', {fichier: fichier}, function (data) {
           if (data.valide) {
             me.pdfValide = true
             if (data.url.trim() === '') {
               me.intervalCheckPdf = setInterval(function () {
-                U.serverCall('server/pdfuf', {fichier: me.inFichier.fileName}, function (data) {
+                U.serverCall('server/pdfuf', {fichier: fichier}, function (data) {
                   console.log(data)
                   if (data.url.trim() !== '') {
                     clearInterval(me.intervalCheckPdf)
@@ -77,10 +118,14 @@ export default {
     },
     valideForm: function () {
       if (!this.isWiki) {
-        if (typeof this.inFichier.file !== 'undefined') {
-          this.fichierValide = this.inFichier.file !== ''
+        if (this.isFromMail) {
+          this.fichierValide = this.fichierMailChoisi !== ''
         } else {
-          this.fichierValide = false
+          if (typeof this.inFichier.file !== 'undefined') {
+            this.fichierValide = this.inFichier.file !== ''
+          } else {
+            this.fichierValide = false
+          }
         }
       } else {
         this.fichierValide = true
@@ -105,6 +150,8 @@ export default {
         infos.isWiki = this.isWiki
         if (this.isWiki) {
           infos.inWiki = this.$refs.inWiki.getContent()
+        } else if (this.isFromMail) {
+          infos.inFichier = { file: this.fichierMailChoisi, fileName: this.fichierMailChoisi }
         } else {
           infos.inFichier = this.inFichier
         }
@@ -118,9 +165,12 @@ export default {
   data: function () {
     return {
       isWiki: false,
+      isFromMail: false,
       inWiki: '',
       inFichier: {},
       fichierValide: true,
+      fichiersMails: [],
+      fichierMailChoisi: '',
       urlPdf: '',
       pdfValide: false,
       intervalCheckPdf: undefined,
@@ -133,6 +183,9 @@ export default {
         type: ''
       }
     }
+  },
+  mounted: function () {
+    this.chargeFichiersMails()
   }
 }
 </script>
