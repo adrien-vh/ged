@@ -18,6 +18,8 @@ require('./commun.js')
 
 Vue.config.productionTip = false
 
+// setTimeout(function () { $('#message').removeClass('invisible').addClass('visible') }, 500)
+
 U.serverCall('server/isConnected', function (data) {
   if (data.connecte) {
     C.utilisateur.informationsRecuperees = true
@@ -25,6 +27,8 @@ U.serverCall('server/isConnected', function (data) {
     C.utilisateur.nom = data.nom
     C.utilisateur.num_utilisateur = data.num_utilisateur
     C.utilisateur.niveau = data.niveau
+    C.utilisateur.login = data.login
+    C.utilisateur.nbLocks = parseInt(data.nbLocks, 10)
   }
   /* eslint-disable no-new */
   new Vue({

@@ -1,9 +1,9 @@
 <template>
-  <div id="affichageDoc" class="row">
+  <div id="affichageDoc" class="col-md-12">
     <div class="col-md-6" v-show="editionMetas">
       <inMetaDoc v-model="metas" ref="formMeta"></inMetaDoc>
       <button type="button" class="btn btn-primary btn-sm" @click="majMetas"><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Enregistrer</button>
-      <button type="button" class="btn btn-default btn-sm" v-on:click="editionMetas = false"><i class="fa fa-times fa-lg" aria-hidden="true"></i> Annuler</button>
+      <button type="button" class="btn btn-default btn-sm" @click="editionMetas = false"><i class="fa fa-times fa-lg" aria-hidden="true"></i> Annuler</button>
     </div>
     <div class="col-md-6" v-show="!editionMetas">
       <div class="pb-5 metas">
@@ -35,30 +35,59 @@
       </table>
     </div>
     <div class="col-md-12 texteCentre" v-show="!editionMetas">
-      <button type="button" class="btn btn-link" v-on:click="download" v-if="infos.isWiki == '0'">
-          <i class="fa fa-floppy-o" aria-hidden="true"></i> Télécharger
+      <div class="btn-group btn-group-sm" role="group" aria-label="...">
+        <button type="button" class="btn btn-default" @click="download" v-if="infos.isWiki == '0'">
+          <i class="fa fa-download fa-lg" aria-hidden="true"></i> Télécharger
         </button>
-        <span v-if="$root.utilisateur.niveau > 0">
-          <button type="button" class="btn btn-link" v-on:click="editerMetas">
-            <i class="fa fa-pencil" aria-hidden="true"></i> Modifier les métadonnées
-          </button>
-          <button type="button" class="btn btn-link" v-on:click="editerWebdav" v-if="infos.isWiki == '0' && editable" v-show="!editionEnCours">
-            <i class="fa fa-pencil" aria-hidden="true"></i> Modifier le fichier original
-          </button>
-          <button type="button" class="btn btn-link" v-on:click="validerWebdav" v-if="infos.isWiki == '0' && editable" v-show="editionEnCours">
-            <i class="fa fa-check" aria-hidden="true"></i> Valider les modifications
-          </button>
-          <button type="button" class="btn btn-link texteRouge" v-on:click="confirmeSuppression = true" v-show="!confirmeSuppression">
-            <i class="fa fa-times" aria-hidden="true"></i> Supprimer le document
-          </button>
-          <button type="button" class="btn btn-link texteRouge" v-on:click="supprimeDoc" v-show="confirmeSuppression">
-            <i class="fa fa-times" aria-hidden="true"></i> Confirmer la suppression ?
-          </button>
-        </span>
+          
+        <button type="button" class="btn btn-primary" 
+                @click="editerMetas"
+                v-if="$root.utilisateur.niveau > 0 && !infos.lockedBy">
+          <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Modifier les métadonnées
+        </button>
+        <button type="button" class="btn btn-primary"
+                @click="editerWebdav"
+                v-if="infos.isWiki == '0' && editable && $root.utilisateur.niveau > 0 && !infos.lockedBy"
+                v-show="!editionEnCours">
+          <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Modifier le fichier original
+        </button>
+        <button type="button" class="btn btn-default" disabled="disabled"
+                v-if="infos.isWiki == '0' && editable && $root.utilisateur.niveau > 0 && infos.lockedBy"
+                v-show="!editionEnCours">
+          <i class="fa fa-lock fa-lg" aria-hidden="true"></i> Verrouillé par {{ infos.lockedByNom }}
+        </button>
+        <button type="button" class="btn btn-primary" 
+                @click="validerWebdav"
+                v-if="infos.isWiki == '0' && editable && $root.utilisateur.niveau > 0 && ((!infos.lockedBy) || (infos.lockedBy == $root.utilisateur.login))"
+                v-show="editionEnCours">
+          <i class="fa fa-check fa-lg" aria-hidden="true"></i> Valider les modifications
+        </button>
+        <button type="button" class="btn btn-primary"
+                @click="annulerWebdav"
+                v-if="infos.isWiki == '0' && editable && $root.utilisateur.niveau > 0 && ((!infos.lockedBy) || (infos.lockedBy == $root.utilisateur.login))"
+                v-show="editionEnCours">
+          <i class="fa fa-times fa-lg" aria-hidden="true"></i> Annuler les modifications
+        </button>
+        <button type="button" class="btn btn-danger"
+                @click="confirmeSuppression = true"
+                v-show="!confirmeSuppression"
+                v-if="$root.utilisateur.niveau > 0 && !infos.lockedBy">
+          <i class="fa fa-times fa-lg" aria-hidden="true"></i> Supprimer le document
+        </button>
+        <button type="button" class="btn btn-danger"
+                @click="supprimeDoc"
+                v-if="confirmeSuppression">
+          <i class="fa fa-question-circle fa-lg" aria-hidden="true"></i> Confirmer la suppression ?
+        </button>
+      </div>
+      <div class="texteRouge mt-5" v-show="editionEnCours">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        Vous avez verouillé ce document, personne ne pourra le modifier tant que vous n'aurez pas annulé ou validé vos modifications !
+      </div>
     </div>
     <div class="col-md-12 mt-5" v-show="infos.isWiki == '1'" v-if="$root.utilisateur.niveau > 0">
       <div class="in-ck mb-5">
-        <inCk inline="true" ref="inWiki"></inCk>
+        <inCk inline="true" ref="inWiki" @save="majContenu"></inCk>
       </div>
       <button type="button" class="btn btn-primary btn-sm" @click="majContenu"><i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i> Enregistrer</button>
     </div>
@@ -84,6 +113,7 @@
     watch: {
       num_doc: function () {
         this.charge()
+        U.serverCall('server/sauveConsult/' + this.num_doc + '/' + this.$root.utilisateur.login)
       }
     },
     data: function () {
@@ -125,6 +155,7 @@
       },
       charge: function () {
         var me = this
+        var intervalPdf
         this.editionMetas = false
         this.urlPdf = 'http://ged/server/pdf.php?num_doc=' + this.num_doc
         U.serverCall('server/infosDoc/' + this.num_doc, function (data) {
@@ -135,6 +166,7 @@
           me.pdfDispo = data.pdfDispo
           me.editable = data.editable
           me.pdfEnGeneration = data.pdfEnGeneration
+          me.editionEnCours = me.$root.utilisateur.login === data.infos.lockedBy
   
           console.log(me.$refs)
   
@@ -143,13 +175,14 @@
           }
   
           if (me.pdfEnGeneration) {
-            setInterval(function () {
+            intervalPdf = setInterval(function () {
               U.serverCall('server/pdfDispo/' + me.num_doc, function (data) {
                 if (data.pdfDispo) {
                   setTimeout(function () {
                     me.pdfEnGeneration = false
                     me.pdfDispo = true
                   }, 5000)
+                  clearInterval(intervalPdf)
                 }
               })
             }, 1000)
@@ -184,17 +217,23 @@
       },
       editerWebdav: function () {
         this.editionEnCours = true
-        U.serverCall('server/lienWebdav/' + this.num_doc, function (data) {
-         // me.charge()
+        this.infos.lockedBy = this.$root.utilisateur.login
+        this.$root.utilisateur.nbLocks += 1
+        U.serverCall('server/lienWebdav/' + this.num_doc + '/' + C.utilisateur.login, function (data) {
           window.open(data.url, '_self')
         })
       },
       validerWebdav: function () {
         var me = this
         this.editionEnCours = false
-        U.serverCall('server/validerWebdav/' + this.num_doc, function (data) {
-          me.charge()
-        })
+        this.$root.utilisateur.nbLocks -= 1
+        U.serverCall('server/validerWebdav/' + this.num_doc, function (data) { me.charge() })
+      },
+      annulerWebdav: function () {
+        var me = this
+        this.editionEnCours = false
+        this.$root.utilisateur.nbLocks -= 1
+        U.serverCall('server/annulerWebdav/' + this.num_doc, function (data) { me.charge() })
       },
       download: function () {
         window.open('http://ged/server/doc.php?num_doc=' + this.num_doc)
@@ -207,6 +246,7 @@
       }
     },
     mounted: function () {
+      U.serverCall('server/sauveConsult/' + this.num_doc + '/' + this.$root.utilisateur.login)
       this.charge()
     }
   }
@@ -264,5 +304,6 @@
   .in-ck, .contenu {
     /* border-top: 1px solid #555;*/
     background-color: #fff;
+    padding: 30px;
   }
 </style>

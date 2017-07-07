@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="col-md-6">
     <ul class="nav nav-pills mb-5">
       <li role="presentation" v-bind:class="{ 'active': pageActive == 1 }"><a href="#" v-on:click.prevent="pageActive = 1">Utilisateur</a></li>
       <li role="presentation" v-bind:class="{ 'active': pageActive == 2 }"><a href="#" v-on:click.prevent="pageActive = 2">Types de documents et catégories liées</a></li>
@@ -77,7 +77,7 @@
                 v-model="nouveauType"
                 v-on:keyup.enter="submitType"
                 >
-                <a href="" v-on:click="submitType"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></a>
+                <a href="" @click.prevent="submitType"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></a>
               </form>
             </td>
           </tr>

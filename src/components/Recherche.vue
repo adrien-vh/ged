@@ -1,7 +1,11 @@
 <template>
-  <div>
+  <div class="col-md-6">
     <inRecherche v-on:lanceRecherche="allerARecherche" :valeur="requeteUrl"></inRecherche>
     <br>
+    <div class="aucun-resultat" v-show="docs.length == 0 && requeteUrl != ''">
+      <i class="fa fa-frown-o fa-5x" aria-hidden="true"></i><br>
+      Aucun résultat trouvé...
+    </div>
     <docCard v-for="doc in docs" :doc="doc" :key="doc.num_doc"></docCard>
   </div>
 </template>
@@ -44,4 +48,9 @@
 </script>
 
 <style scoped lang="scss">
+  .aucun-resultat {
+    text-align: center;
+    font-size: 25px;
+    color: #aaa;
+  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="col-md-6">
     <nuageTags :tags="tags" @tagclick="openTag" v-show="tags.length > 0"></nuageTags>
     <div>
       <span v-for="tag in tagsChoisis" class="tag">

@@ -1,6 +1,6 @@
 <template>
   <div class="input-group" id="inRecherche">
-    <input type="text" class="form-control typeahead" placeholder="Rechercher...">
+    <input type="text" class="form-control typeahead" autofocus placeholder="Rechercher...">
     <span class="input-group-btn">
       <button class="btn btn-default" type="button" v-on:click="lanceRecherche">
         <i class="fa fa-search" aria-hidden="true"></i>
@@ -12,6 +12,13 @@
 <script>
 export default {
   props: ['valeur'],
+  watch: {
+    valeur: function () {
+      if (typeof this.valeur !== 'undefined' && this.valeur !== '') {
+        $('.tt-input').typeahead('val', this.valeur)
+      }
+    }
+  },
   data: function () {
     return {}
   },

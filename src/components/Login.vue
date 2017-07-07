@@ -50,7 +50,12 @@ export default {
               C.utilisateur.nom = data.nom
               C.utilisateur.num_utilisateur = data.num_utilisateur
               C.utilisateur.niveau = parseInt(data.niveau, 10)
-              me.$router.push('/')
+              C.utilisateur.nbLocks = parseInt(data.nbLocks, 10)
+              if (C.pathDemande !== '' && C.pathDemande !== '/login') {
+                me.$router.push(C.pathDemande)
+              } else {
+                me.$router.push('/')
+              }
             } else {
               me.loginValide = false
             }

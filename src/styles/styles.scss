@@ -26,11 +26,22 @@ body {
     margin: 0;
 }
 
+a {
+   outline: 0;
+}
+
 .texteGris {
     color: $CN4;
 }
+.texteGrisClair {
+    color: $CN2;
+}
 .texteRouge {
     color: $CR17;   
+}
+
+.souligne {
+  text-decoration: underline;
 }
 
 button.texteRouge {
@@ -52,6 +63,55 @@ button.texteRouge {
     &.gris {
         background-color: #eeeeee;    
     }
+}
+
+#message {
+  transition: all 0.3s ease-in-out;
+  position: fixed;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  height: 100px;
+  background-color: #ffffff;
+  z-index: 3000;
+  padding: 60px 10px 10px 65px;
+  text-align: center;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0px 0px 10px rgba($CW9, 0.7);
+  
+  i {
+    position: absolute;
+    color: $CG14;
+    top: 40px;
+    left: 10px;
+  }
+  
+  &.visible {
+    top: -40px;
+  }
+  
+  &.invisible {
+    top: -100px;
+  }
+  
+}
+
+#loading {
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  bottom: 10px;
+  left: 0;
+  color: $CN4;
+  
+  div {
+    position: absolute;
+    top: 13px;
+    left: 50%;
+    margin-left: -3px;
+    font-size: 11px;
+    font-weight: bold;
+  }
 }
 
 .contenu {
