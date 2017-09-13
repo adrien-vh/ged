@@ -40,8 +40,16 @@ a {
     color: $CR17;   
 }
 
+.fondBlanc {
+  background-color: #ffffff;
+}
+
 .souligne {
   text-decoration: underline;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 button.texteRouge {

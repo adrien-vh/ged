@@ -16,7 +16,7 @@
                   class="btn btn-default" 
                   v-bind:class="{ 'active': !isWiki && isFromMail }" 
                   v-on:click="isWiki = false; isFromMail = true">
-            Fichier envoyé par mail
+            Mails
           </button>
           <button type="button" class="btn btn-default" v-bind:class="{ 'active': isWiki }" v-on:click="isWiki = true">Wiki</button>
         </div>
@@ -26,7 +26,7 @@
           </div>
         </div>
         <div v-show="!isWiki && isFromMail">
-          <table class="table table-hover">
+          <!--<table class="table table-hover">
             <tbody>
               <tr v-for="fichierMail in fichiersMails">
                 <td>
@@ -34,6 +34,19 @@
                     <a href="#" @click.prevent="supprimeFichierMail(fichierMail)"><i class="fa fa-trash-o fa-lg texteRouge" aria-hidden="true"></i></a>
                   </span>
                   <a href="#" @click.prevent="chargeFichierMail(fichierMail)">{{ fichierMail.nomFichier }}</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>-->
+          <table class="table table-hover">
+            <tbody>
+              <tr v-for="mail in mails">
+                <td @click.prevent="chargeMail(mail)" class="pointer" :class="{fondBlanc: mail.actif}">
+                  <!--<span class="mr-2">
+                    <a href="#" @click.prevent="supprimeFichierMail(fichierMail)"><i class="fa fa-trash-o fa-lg texteRouge" aria-hidden="true"></i></a>
+                  </span>-->
+                  <!--<a href="#" @click.prevent="chargeFichierMail(fichierMail)">{{ fichierMail.nomFichier }}</a>-->
+                   <i class="fa fa-paperclip" aria-hidden="true"></i> {{ mail.attachments.length }} <i class="fa fa-envelope-o" aria-hidden="true"></i>  {{ mail.sujet }}
                 </td>
               </tr>
             </tbody>
@@ -48,6 +61,10 @@
       </form>
     </div>
     <div class="col-md-6">
+      <div class="col-md-12 mt-5" v-show="!isWiki && isFromMail">
+        <span v-for="attachment in mailCourant.attachments" class="mr-3"><i class="fa fa-file-o" aria-hidden="true"></i> {{ attachment }} </span>
+        <div class="fondBlanc p-5 mt-3" v-html="mailCourant.contenu"></div>
+      </div>
       <div class="col-md-12 mt-5 texteCentre" v-show="pdfValide && urlPdf == ''">
         Génération du pdf en cours...<br><br>
         <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>      
@@ -75,6 +92,18 @@ export default {
       U.serverCall('server/fichiersMails', function (data) {
         me.fichiersMails = data.fichiersMails
       })
+    },
+    chargeMails: function () {
+      var me = this
+      U.serverCall('server/mails', function (data) {
+        me.mails = data.mails
+      })
+    },
+    chargeMail: function (mail) {
+      this.htmlMail = mail.contenu
+      mail.actif = true
+      this.mailCourant.actif = false
+      this.mailCourant = mail
     },
     supprimeFichierMail: function (fichier) {
       var me = this
@@ -170,10 +199,12 @@ export default {
       inFichier: {},
       fichierValide: true,
       fichiersMails: [],
+      mails: [],
       fichierMailChoisi: '',
       urlPdf: '',
       pdfValide: false,
       intervalCheckPdf: undefined,
+      mailCourant: {actif: false, contenu: '', attachments: []},
       metas: {
         typeValide: true,
         categories: [],
@@ -186,6 +217,7 @@ export default {
   },
   mounted: function () {
     this.chargeFichiersMails()
+    this.chargeMails()
   }
 }
 </script>
