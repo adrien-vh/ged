@@ -41,7 +41,7 @@
           <table class="table table-hover">
             <tbody>
               <tr v-for="mail in mails">
-                <td @click.prevent="chargeMail(mail)" class="pointer" :class="{fondBlanc: mail.actif}">
+                <td @click.prevent="chargeMail(mail)" class="pointer" :class="{fondBlanc: mail.uid == uidCourant}">
                   <!--<span class="mr-2">
                     <a href="#" @click.prevent="supprimeFichierMail(fichierMail)"><i class="fa fa-trash-o fa-lg texteRouge" aria-hidden="true"></i></a>
                   </span>-->
@@ -62,8 +62,9 @@
     </div>
     <div class="col-md-6">
       <div class="col-md-12 mt-5" v-show="!isWiki && isFromMail">
-        <span v-for="attachment in mailCourant.attachments" class="mr-3"><i class="fa fa-file-o" aria-hidden="true"></i> {{ attachment }} </span>
-        <div class="fondBlanc p-5 mt-3" v-html="mailCourant.contenu"></div>
+        <vueMail :uid="uidCourant"></vueMail>
+        <!--<span v-for="attachment in mailCourant.attachments" class="mr-3"><i class="fa fa-file-o" aria-hidden="true"></i> {{ attachment }} </span>
+        <div class="fondBlanc p-5 mt-3" v-html="mailCourant.contenu"></div>-->
       </div>
       <div class="col-md-12 mt-5 texteCentre" v-show="pdfValide && urlPdf == ''">
         Génération du pdf en cours...<br><br>
@@ -83,9 +84,10 @@ import inFichier from '@/components/inFichier'
 import inTagCategorie from '@/components/inTagCategorie'
 import inMetaDoc from '@/components/inMetaDoc'
 import inCk from '@/components/inCk'
+import vueMail from '@/components/vueMail'
 
 export default {
-  components: { inTags, inFichier, inCk, inTagCategorie, inMetaDoc },
+  components: { inTags, inFichier, inCk, inTagCategorie, inMetaDoc, vueMail },
   methods: {
     chargeFichiersMails: function () {
       var me = this
@@ -101,9 +103,8 @@ export default {
     },
     chargeMail: function (mail) {
       this.htmlMail = mail.contenu
-      mail.actif = true
-      this.mailCourant.actif = false
-      this.mailCourant = mail
+      this.uidCourant = mail.uid
+      this.metas.titre = mail.sujet
     },
     supprimeFichierMail: function (fichier) {
       var me = this
@@ -148,7 +149,7 @@ export default {
     valideForm: function () {
       if (!this.isWiki) {
         if (this.isFromMail) {
-          this.fichierValide = this.fichierMailChoisi !== ''
+          this.fichierValide = this.uidCourant !== 0
         } else {
           if (typeof this.inFichier.file !== 'undefined') {
             this.fichierValide = this.inFichier.file !== ''
@@ -177,10 +178,11 @@ export default {
         infos.titre = this.metas.titre
         infos.tags = this.metas.tags
         infos.isWiki = this.isWiki
+        infos.isFromMail = this.isFromMail
         if (this.isWiki) {
           infos.inWiki = this.$refs.inWiki.getContent()
         } else if (this.isFromMail) {
-          infos.inFichier = { file: this.fichierMailChoisi, fileName: this.fichierMailChoisi }
+          infos.uid = this.uidCourant
         } else {
           infos.inFichier = this.inFichier
         }
@@ -204,7 +206,7 @@ export default {
       urlPdf: '',
       pdfValide: false,
       intervalCheckPdf: undefined,
-      mailCourant: {actif: false, contenu: '', attachments: []},
+      uidCourant: 0,
       metas: {
         typeValide: true,
         categories: [],

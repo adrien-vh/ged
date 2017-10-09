@@ -16,6 +16,9 @@
     props: ['doc', 'small', 'pinnable'],
     methods: {
       ext: function (chemin) {
+        if (this.doc.isMail === '1') {
+          return 'mail'
+        }
         var ext = chemin.substr(chemin.lastIndexOf('.') + 1)
         return ext === 'html' ? 'wiki' : ext
       },
@@ -74,8 +77,10 @@
       font-weight: bold;
       &.wiki { background-color: $CW1; color: $CW9; }
       &.pdf { background-color: $CR17; color: $CW00; }
-      &.docx { background-color: $CB18; color: $CW00; }
-      &.xlsx { background-color: $CG14; color: $CW00; }
+      &.docx, &.doc { background-color: $CB18; color: $CW00; }
+      &.xlsx, &.xls { background-color: $CG14; color: $CW00; }
+      &.pptx, &.ppt { background-color: $CYR09; color: $CW00; }
+      &.mail { background-color: $CY06; color: $CW9; }
     }
     
     .titre {

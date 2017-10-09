@@ -36,7 +36,7 @@
     </div>
     <div class="col-md-12 texteCentre" v-show="!editionMetas">
       <div class="btn-group btn-group-sm" role="group" aria-label="...">
-        <button type="button" class="btn btn-default" @click="download" v-if="infos.isWiki == '0'">
+        <button type="button" class="btn btn-default" @click="download" v-if="infos.isWiki == '0' && infos.isMail == '0'">
           <i class="fa fa-download fa-lg" aria-hidden="true"></i> Télécharger
         </button>
           
@@ -85,7 +85,7 @@
         Vous avez verouillé ce document, personne ne pourra le modifier tant que vous n'aurez pas annulé ou validé vos modifications !
       </div>
     </div>
-    <div class="col-md-12 mt-5" v-show="infos.isWiki == '1'" v-if="$root.utilisateur.niveau > 0">
+    <div class="col-md-12 mt-5" v-show="infos.isWiki == '1' && infos.isMail == '0'" v-if="$root.utilisateur.niveau > 0">
       <div class="in-ck mb-5">
         <inCk inline="true" ref="inWiki" @save="majContenu"></inCk>
       </div>
@@ -97,8 +97,14 @@
       Génération du pdf en cours...<br><br>
       <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>      
     </div>
-    <div class="col-md-12 mt-5" v-if="infos.isWiki == '0' && pdfDispo">
+    <div class="col-md-12 mt-5" v-if="infos.isWiki == '0' && infos.isMail == '0' && pdfDispo">
       <iframe :src="urlPdf" style="width: 100%;height: 800px;border: 1px solid #000;" id="pdfView"></iframe>
+    </div>
+    <div class="col-md-12 mt-5" v-if="infos.isMail == '1'">
+      <!-- {{ infos.uid }}-->
+      <vueMail :uid="infos.uid"></vueMail>
+      <!--<span v-for="attachment in mailCourant.attachments" class="mr-3"><i class="fa fa-file-o" aria-hidden="true"></i> {{ attachment }} </span>
+      <div class="fondBlanc p-5 mt-3" v-html="mailCourant.contenu"></div>-->
     </div>
   </div>
 </template>
@@ -106,9 +112,10 @@
 <script>
   import inCk from '@/components/inCk'
   import inMetaDoc from '@/components/inMetaDoc'
+  import vueMail from '@/components/vueMail'
   
   export default {
-    components: { inCk, inMetaDoc },
+    components: { inCk, inMetaDoc, vueMail },
     props: ['num_doc'],
     watch: {
       num_doc: function () {
@@ -160,6 +167,9 @@
         this.urlPdf = 'http://ged/server/pdf.php?num_doc=' + this.num_doc
         U.serverCall('server/infosDoc/' + this.num_doc, function (data) {
           me.infos = data.infos
+          if (me.infos.isMail === '1') {
+            me.infos.uid = me.infos.chemin.substring(me.infos.chemin.lastIndexOf('_') + 1)
+          }
           me.categories = data.categories
           me.tags = data.tags
           me.extension = data.extension !== 'html' ? data.extension : 'wiki'
