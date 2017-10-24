@@ -46,6 +46,11 @@
           <i class="fa fa-pencil fa-lg" aria-hidden="true"></i> Modifier les métadonnées
         </button>
         <button type="button" class="btn btn-primary"
+                @click="openWikiPdf"
+                v-if="infos.isWiki == '1'">
+          <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> Télécharger en PDF
+        </button>
+        <button type="button" class="btn btn-primary"
                 @click="editerWebdav"
                 v-if="infos.isWiki == '0' && editable && $root.utilisateur.niveau > 0 && !infos.lockedBy"
                 v-show="!editionEnCours">
@@ -253,6 +258,9 @@
         U.serverCall('server/supprimeDoc/' + this.num_doc, function () {
           me.$router.push('/recherche')
         })
+      },
+      openWikiPdf: function () {
+        window.open('http://ged/server/toPdf/wikiToPdf.php?num_doc=' + this.num_doc, '_self')
       }
     },
     mounted: function () {
@@ -275,6 +283,10 @@
     tr td:last-child {
       
     }
+  }
+  
+  button a {
+    color: #fff;
   }
   
   .doc-metas {
