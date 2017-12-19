@@ -2,10 +2,16 @@
   <div class="col-md-6">
     <inRecherche v-on:lanceRecherche="allerARecherche" :valeur="requeteUrl"></inRecherche>
     <br>
-    <div class="aucun-resultat" v-show="docs.length == 0 && requeteUrl != ''">
+    <div class="aucun-resultat" v-show="docs.length == 0 && docsTag.length == 0 && docsTitre.length == 0 && requeteUrl != ''">
       <i class="fa fa-frown-o fa-5x" aria-hidden="true"></i><br>
       Aucun résultat trouvé...
     </div>
+    <a href="#" @click.prevent="allerARecherche(requeteUrl + ' ' + tag.mot)" v-for="tag in tags" class="tag">{{ tag.mot }} ({{ tag.total }})</a>
+    <h3 v-show="docsTag.length > 0">Tags</h3>
+    <docCard v-for="doc in docsTag" :doc="doc" :key="doc.num_doc"></docCard>
+    <h3 v-show="docsTitre.length > 0">Titre</h3>
+    <docCard v-for="doc in docsTitre" :doc="doc" :key="doc.num_doc"></docCard>
+    <h3 v-show="docs.length > 0">Full-text</h3>
     <docCard v-for="doc in docs" :doc="doc" :key="doc.num_doc"></docCard>
   </div>
 </template>
@@ -20,7 +26,10 @@
     data: function () {
       return {
         requete: '',
-        docs: []
+        docs: [],
+        docsTag: [],
+        docsTitre: [],
+        tags: []
       }
     },
     methods: {
@@ -32,6 +41,9 @@
         if (typeof requete !== 'undefined' && requete !== '') {
           U.serverCall('server/recherche/' + requete, function (data) {
             me.docs = data.docs
+            me.docsTag = data.resultatsTags
+            me.docsTitre = data.resultatsTitre
+            me.tags = data.tags
           })
         }
       }
@@ -52,5 +64,17 @@
     text-align: center;
     font-size: 25px;
     color: #aaa;
+  }
+  
+  h3 {
+    color: #555;
+    margin-bottom: 25px;
+    font-size: 16px;
+  }
+  .tag {
+    display: inline-block;
+    margin: 0 5px;
+    text-decoration: underline;
+    font-size: .8em;
   }
 </style>

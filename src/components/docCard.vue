@@ -3,7 +3,7 @@
     <div class="ext" :class="ext(doc.chemin)"><span v-if="!small">{{ ext(doc.chemin) }}</span></div>
     <div class="sur-titre"><b>{{ doc.type }}</b><span v-if="!small" v-show="doc.tags"> - {{ doc.tags }}</span></div>
     <div class="titre">{{ doc.titre }}</div>
-    <div class="sous-titre"><span v-if="!small">par </span>{{ doc.auteur }}<span v-if="!small"> le {{ $root.formatDate(doc.date) }}</span></div>
+    <!--<div class="sous-titre"><span v-if="!small">par </span>{{ doc.auteur }}<span v-if="!small"> le {{ $root.formatDate(doc.date) }}</span></div>-->
     <div v-if="doc.contenu" v-html="doc.contenu" class="contenu-doc"></div>
     <div v-if="pinnable" class="pin" @click.prevent="pin" v-bind:class="{ texteGrisClair : doc.pin == '0' }">
       <i class="fa fa-thumb-tack" aria-hidden="true"></i>
@@ -85,11 +85,12 @@
     
     .titre {
       color: $CB97;
-      font-size: 18px;
+      font-size: 16px;
     }
     
     .sur-titre {
       color: $CW7;
+      font-size: 11px;
     }
     
     .sous-titre {

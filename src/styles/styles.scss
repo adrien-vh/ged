@@ -1,3 +1,4 @@
+@import "ibmTypes";
 @import "spacers";
 @import "police";
 @import "copic";
@@ -19,7 +20,7 @@ html {
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'ibm-plex-sans', 'Open Sans', sans-serif;
     padding-top: 50px;
     background-color: transparent;
     height: 100%;
@@ -114,7 +115,7 @@ button.texteRouge {
   
   div {
     position: absolute;
-    top: 13px;
+    top: 16px;
     left: 50%;
     margin-left: -3px;
     font-size: 11px;
